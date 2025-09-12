@@ -20,7 +20,7 @@ export default function MediaUploadPage() {
     setPercent(0);
     setBlobUrl('');
 
-    const file = inputRef.current?.files?.; // perbaikan: gunakan ?. 
+    const file = inputRef.current?.files?.; // perbaikan: akses index 0
     if (!file) return setError('Pilih file terlebih dahulu');
 
     if (file.size > MAX_BYTES) {

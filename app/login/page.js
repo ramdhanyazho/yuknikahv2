@@ -1,13 +1,13 @@
 // app/login/page.js
 'use client';
-import { signIn } from 'next-auth/react';
+import Link from 'next/link';
 
 export default function LoginPage() {
   return (
     <main className="container">
-      <h1>Masuk ke Admin</h1>
-      <p>Gunakan akun OAuth (contoh: GitHub) untuk mengakses dashboard.</p>
-      <button className="btn primary" onClick={() => signIn('github')}>Masuk dengan GitHub</button>
+      <h1>Masuk Admin</h1>
+      <p>Area admin dilindungi Basic Auth. Tekan tombol di bawah untuk masuk.</p>
+      <Link className="btn primary" href="/dashboard">Masuk ke Dashboard</Link>
     </main>
   );
 }
