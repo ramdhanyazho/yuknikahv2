@@ -10,7 +10,6 @@ const handler = NextAuth({
     }),
   ],
   session: { strategy: 'jwt' },
-  pages: { signIn: '/login' }, // opsional: arahkan ke halaman login kustom
 });
 
 export { handler as GET, handler as POST };
