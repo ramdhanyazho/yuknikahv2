@@ -1,4 +1,4 @@
-// app/(admin)/media/page.js
+// app/admin/media/page.js
 'use client';
 
 import { upload } from '@vercel/blob/client';
@@ -20,7 +20,8 @@ export default function MediaUploadPage() {
     setPercent(0);
     setBlobUrl('');
 
-    const file = inputRef.current?.files?.; // akses index 0 dengan optional chaining
+    // FIX: akses file pertama dengan optional chaining pada array
+    const file = inputRef.current?.files?.;
     if (!file) return setError('Pilih file terlebih dahulu');
 
     if (file.size > MAX_BYTES) {

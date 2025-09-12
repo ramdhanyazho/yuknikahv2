@@ -1,4 +1,4 @@
-// app/(admin)/dashboard/page.js
+// app/admin/dashboard/page.js
 async function createInvitation(formData) {
   'use server';
   const payload = Object.fromEntries(formData);

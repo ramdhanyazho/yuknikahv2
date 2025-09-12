@@ -1,4 +1,4 @@
-// app/(admin)/guests/page.js
+// app/admin/guests/page.js
 'use client';
 
 import { useEffect, useState } from 'react';
