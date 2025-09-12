@@ -1,0 +1,103 @@
+/* app/(admin)/admin.css */
+:root {
+  --bg: #0b0b0c;
+  --panel: #121214;
+  --muted: #9aa0a6;
+  --text: #e6e6e6;
+  --accent: #6ee7b7;
+  --border: #232327;
+}
+
+.admin-shell {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.admin-aside {
+  background: var(--panel);
+  border-right: 1px solid var(--border);
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  letter-spacing: .3px;
+}
+.brand-mark { font-size: 20px; }
+.brand-name { color: var(--text); }
+
+.admin-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.admin-nav a {
+  color: var(--text);
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+}
+.admin-nav a:hover {
+  background: #16161a;
+  border-color: var(--border);
+}
+
+.admin-meta {
+  margin-top: auto;
+  color: var(--muted);
+}
+
+.admin-main {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-width: 0;
+}
+
+.admin-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: linear-gradient(180deg, rgba(11,11,12,.9), rgba(11,11,12,.6));
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 18px;
+}
+
+.admin-content {
+  padding: 20px 18px 28px;
+  max-width: 960px;
+}
+
+.admin-footer {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  padding: 12px 18px;
+}
+
+@media (max-width: 960px) {
+  .admin-shell { grid-template-columns: 1fr; }
+  .admin-aside {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .admin-nav { flex-direction: row; gap: 8px; }
+  .admin-nav a { padding: 8px 10px; }
+}
