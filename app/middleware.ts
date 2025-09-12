@@ -1,24 +1,40 @@
 // middleware.ts
 import { NextResponse } from 'next/server';
-import { getToken } from 'next-auth/jwt';
 import type { NextRequest } from 'next/server';
 
-const PROTECTED = [/^\/dashboard/, /^\/guests/, /^\/checkin/, /^\/media/, /^\/statistik/, /^\/settings/];
+const PROTECTED = [/^\/dashboard/, /^\/guests/, /^\/media/, /^\/checkin/, /^\/statistik/, /^\/settings/];
 
-export async function middleware(req: NextRequest) {
+export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  const isProtected = PROTECTED.some(rx => rx.test(pathname));
-  if (!isProtected) return NextResponse.next();
+  const needsAuth = PROTECTED.some(rx => rx.test(pathname));
+  if (!needsAuth) return NextResponse.next();
 
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-  if (!token) {
-    const url = new URL('/login', req.nextUrl.origin);
-    url.searchParams.set('next', pathname);
-    return NextResponse.redirect(url);
+  const auth = req.headers.get('authorization');
+  const user = process.env.BASIC_AUTH_USER || '';
+  const pass = process.env.BASIC_AUTH_PASS || '';
+
+  if (auth && user && pass) {
+    const [scheme, encoded] = auth.split(' ');
+    if (scheme === 'Basic') {
+      const [u, p] = Buffer.from(encoded || '', 'base64').toString().split(':');
+      if (u === user && p === pass) {
+        return NextResponse.next();
+      }
+    }
   }
-  return NextResponse.next();
+
+  const res = new NextResponse('Authentication required', { status: 401 });
+  res.headers.set('WWW-Authenticate', 'Basic realm="yuknikah-admin"');
+  return res;
 }
 
 export const config = {
-  matcher: ['/((?!api|_next|static|favicon.ico|og.png).*)'],
+  matcher: [
+    '/dashboard/:path*',
+    '/guests/:path*',
+    '/media/:path*',
+    '/checkin/:path*',
+    '/statistik/:path*',
+    '/settings/:path*',
+  ],
 };
