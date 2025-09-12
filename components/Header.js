@@ -8,17 +8,19 @@ export default function Header() {
   return (
     <Navbar bg="white" expand="lg" className="shadow-sm fixed-top">
       <Container fluid className="mx-xl-5">
+        
+        {/* BAGIAN INI SUDAH DIUBAH SESUAI PERMINTAAN ANDA */}
         <Navbar.Brand href="/">
-          <img 
-            src="/logo-indoinvite.png" // Asumsi Anda menyimpan logo di folder public
-            alt="indoinvite" 
-            style={{ height: '40px' }} 
-          />
+          <span className="fw-bold fs-4 text-dark">
+            yuknikah.id
+          </span>
         </Navbar.Brand>
+        
         <div className="d-flex d-lg-none">
-            <Button variant="primary" className="me-2">Uji Coba Gratis</Button>
-            <Navbar.Toggle aria-controls="navbarSupportedContent" />
+          <Button variant="primary" className="me-2">Uji Coba Gratis</Button>
+          <Navbar.Toggle aria-controls="navbarSupportedContent" />
         </div>
+        
         <Navbar.Collapse id="navbarSupportedContent">
           <Nav className="mx-auto">
             <Nav.Link href="/">Home</Nav.Link>

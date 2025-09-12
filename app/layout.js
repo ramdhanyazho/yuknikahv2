@@ -2,15 +2,15 @@
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './globals.css';
-// SessionProvider mungkin tidak Anda gunakan di sini, tergantung kebutuhan.
-// Jika tidak ada login di halaman depan, ini bisa dihapus atau dibiarkan.
+// SessionProvider bisa diaktifkan kembali jika dibutuhkan untuk login
 // import { SessionProvider } from './providers/SessionProvider'; 
 import { Inter } from 'next/font/google';
 
 const inter = Inter({ subsets: ['latin'] });
 
+// Metadata sudah disesuaikan dengan nama baru 'yuknikah.id'
 export const metadata = {
-  title: { default: 'IndoInvite — Undangan Digital', template: '%s · IndoInvite' },
+  title: { default: 'yuknikah.id — Undangan Digital', template: '%s · yuknikah.id' },
   description: 'Buat undangan digital gratis untuk segala acara tanpa ribet.',
 };
 
@@ -20,7 +20,7 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         {/* <SessionProvider> */}
           {children}
-        {/* </SessionProvider> */}
+        {/* </Session-Provider> */}
       </body>
     </html>
   );
