@@ -1,38 +1,29 @@
-// app/api/upload/route.js
-import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
+// app/api/upload/route.js (JS)
+import { handleUpload } from '@vercel/blob/client';
 import { NextResponse } from 'next/server';
 
-// Opsional: validasi sesi admin di sini sebelum generate token
-
 export async function POST(request) {
-  const body = (await request.json()) /** @type {HandleUploadBody} */;
+  const body = await request.json();
 
   try {
     const json = await handleUpload({
       body,
       request,
-      onBeforeGenerateToken: async (pathname, clientPayload, multipart) => {
-        // Batasi ukuran dan tipe file agar storage efisien
+      onBeforeGenerateToken: async () => {
         return {
           addRandomSuffix: true,
           allowedContentTypes: ['image/jpeg', 'image/png', 'image/webp'],
-          maximumSizeInBytes: 3 * 1024 * 1024, // 3 MB
-          // validUntil: Date.now() + 60_000, // opsional: token 1 menit
-          // tokenPayload: JSON.stringify({ by: 'admin', multipart }),
+          maximumSizeInBytes: 3 * 1024 * 1024, // 3MB limit server-side
         };
       },
-      onUploadCompleted: async ({ blob, tokenPayload }) => {
-        // Catatan: Callback ini tidak memanggil localhost; gunakan ngrok saat dev
-        // Simpan blob.url ke DB (Turso) sebagai cover/galeri sesuai kebutuhan
-        console.log('Upload selesai:', blob.url);
+      onUploadCompleted: async ({ blob }) => {
+        // Simpan blob.url ke DB bila perlu (catatan: webhook ini tidak memanggil localhost saat dev)
+        console.log('Blob uploaded:', blob.url);
       },
     });
 
     return NextResponse.json(json);
   } catch (err) {
-    return NextResponse.json(
-      { error: err instanceof Error ? err.message : String(err) },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: err.message || String(err) }, { status: 400 });
   }
 }
