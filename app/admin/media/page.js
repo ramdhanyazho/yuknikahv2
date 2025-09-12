@@ -20,9 +20,12 @@ export default function MediaUploadPage() {
     setPercent(0);
     setBlobUrl('');
 
-    // FIX: akses file pertama dengan optional chaining pada array
-    const file = inputRef.current?.files?.;
-    if (!file) return setError('Pilih file terlebih dahulu');
+    // PERBAIKAN: Mengambil file pertama dari daftar dengan [0]
+    const file = inputRef.current?.files?.[0];
+    
+    if (!file) {
+      return setError('Pilih file terlebih dahulu');
+    }
 
     if (file.size > MAX_BYTES) {
       return setError(`Maksimum ${MAX_MB}MB. File ${(file.size / (1024 * 1024)).toFixed(2)}MB`);
