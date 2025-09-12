@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@libsql/client": "latest",
+    "html5-qrcode": "latest",
     "next": "latest",
+    "qrcode": "latest",
     "react": "latest",
     "react-dom": "latest"
   }

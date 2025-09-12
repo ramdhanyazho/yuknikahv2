@@ -38,3 +38,16 @@ CREATE TABLE IF NOT EXISTS wishes (
   created_at TEXT DEFAULT (datetime('now')),
   FOREIGN KEY (invitation_id) REFERENCES invitations(id) ON DELETE CASCADE
 );
+
+
+CREATE TABLE IF NOT EXISTS guests (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  invitation_id INTEGER NOT NULL,
+  name TEXT NOT NULL,
+  phone TEXT,
+  token TEXT NOT NULL UNIQUE,
+  checked_in_at TEXT,
+  created_at TEXT DEFAULT (datetime('now')),
+  FOREIGN KEY (invitation_id) REFERENCES invitations(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_guests_token ON guests(token);
