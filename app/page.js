@@ -1,11 +1,6 @@
+// app/page.js
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
-
-// Anda bisa memindahkan metadata ini ke app/layout.js jika ingin
-export const metadata = {
-  title: 'IndoInvite — Undangan Digital',
-  description: 'Buat undangan digital gratis untuk segala acara tanpa ribet.',
-};
 
 export default function HomePage() {
   return (
@@ -13,9 +8,16 @@ export default function HomePage() {
       <Header />
       <main>
         <Hero />
-        {/* Di sini Anda bisa menambahkan section lain seperti Fitur, Harga, dll. */}
+        {/*
+          Di sini kita bisa menambahkan komponen lain satu per satu:
+          - Kategori Pilihan
+          - Harga
+          - Fitur
+          - Testimoni
+          - FAQ
+          - Footer
+        */}
       </main>
-      {/* Di sini Anda bisa menambahkan komponen Footer */}
     </div>
   );
 }

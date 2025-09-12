@@ -1,5 +1,6 @@
 // app/layout.js (Versi Baru)
 
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './globals.css';
 // SessionProvider mungkin tidak Anda gunakan di sini, tergantung kebutuhan.
 // Jika tidak ada login di halaman depan, ini bisa dihapus atau dibiarkan.

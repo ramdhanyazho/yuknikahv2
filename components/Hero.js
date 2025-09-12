@@ -1,42 +1,45 @@
 // components/Hero.js
 import Image from 'next/image';
-import Link from 'next/link';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 
 export default function Hero() {
   return (
-    <section className="bg-white py-20">
-      <div className="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
-        {/* Kolom Teks */}
-        <div className="text-center md:text-left">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 leading-tight">
-            Buat Undangan Digital Gratis Untuk Momen Spesial Anda
-          </h1>
-          <p className="mt-6 text-lg text-gray-600">
-            Coba sekarang dan buat undangan digital uji coba GRATIS untuk segala acara dalam waktu 5 menit. Bayar setelah jadi.
-          </p>
-          <div className="mt-8 flex flex-col sm:flex-row justify-center md:justify-start gap-4">
-            <Link href="/coba-gratis" className="bg-blue-500 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-blue-600 transition-colors">
-              Uji Coba Gratis
-            </Link>
-            <Link href="/hubungi-admin" className="bg-white text-green-500 border-2 border-green-500 px-8 py-4 rounded-full text-lg font-semibold hover:bg-green-50 transition-colors">
-              Dibuatin Admin Aja
-            </Link>
-          </div>
-        </div>
-
-        {/* Kolom Gambar */}
-        <div className="relative h-96 md:h-full flex justify-center items-center">
+    // Tambahkan pt-5 dan style={{ marginTop: '70px' }} untuk memberi ruang di bawah header
+    <section className="bg-white py-5 pt-5" style={{ marginTop: '70px' }}>
+      <Container>
+        <Row className="align-items-center">
+          <Col lg={6} md={6}>
+            <div className="py-5">
+              <h1 className="fw-bold display-4">
+                Buat Undangan <br /> Digital Gratis <br /> Tanpa Ribet!
+              </h1>
+              <p className="mt-3 fs-6">
+                Coba sekarang dan buat undangan digital uji coba <strong>GRATIS</strong> untuk segala acara dalam waktu <strong>5 menit</strong>.
+                Gak mau ribet? Minta <strong>dibuatin admin</strong> uji coba Gratis, bayar setelah jadi.
+              </p>
+              <div className="mt-4">
+                <Button variant="primary" size="lg" className="me-2">
+                  Uji Coba Gratis &gt;
+                </Button>
+                <Button variant="outline-success" size="lg">
+                  Dibuatin Admin Aja
+                </Button>
+              </div>
+            </div>
+          </Col>
+          <Col lg={6} md={6} className="d-none d-md-block">
             {/* Ganti `src` dengan path ke gambar mockup Anda */}
-            {/* Anda bisa menggunakan gambar screenshot Anda untuk sementara */}
-            <Image 
-                src="/path/ke/gambar/mockup.png" // Ganti path ini!
-                alt="Mockup Undangan Digital"
-                width={500}
-                height={500}
-                className="object-contain"
+            {/* Simpan gambar di folder `public` */}
+            <Image
+              src="/mockup.png" // Contoh: public/mockup.png
+              alt="Mockup Undangan Digital"
+              width={600}
+              height={600}
+              className="img-fluid"
             />
-        </div>
-      </div>
+          </Col>
+        </Row>
+      </Container>
     </section>
   );
 }
