@@ -20,7 +20,7 @@ export default function MediaUploadPage() {
     setPercent(0);
     setBlobUrl('');
 
-    const file = inputRef.current?.files?.; // perbaikan: akses index 0
+    const file = inputRef.current?.files?.; // akses index 0 dengan optional chaining
     if (!file) return setError('Pilih file terlebih dahulu');
 
     if (file.size > MAX_BYTES) {
@@ -48,6 +48,7 @@ export default function MediaUploadPage() {
         <input placeholder="slug/folder (opsional)" value={folder} onChange={(e) => setFolder(e.target.value)} />
         <input type="file" accept="image/jpeg,image/png,image/webp" ref={inputRef} required />
         <button className="btn">Upload</button>
+
         {percent > 0 && (
           <div>
             <div style={{ height: 8, background: '#222', borderRadius: 999 }}>
@@ -56,8 +57,10 @@ export default function MediaUploadPage() {
             <small>{percent}%</small>
           </div>
         )}
+
         {error && <p style={{ color: '#f87171' }}>{error}</p>}
       </form>
+
       {blobUrl && (
         <div className="card">
           <div>URL: <a href={blobUrl} target="_blank" rel="noreferrer">{blobUrl}</a></div>

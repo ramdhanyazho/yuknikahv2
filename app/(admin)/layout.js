@@ -1,18 +1,13 @@
 // app/(admin)/layout.js
 import Link from 'next/link';
 import './admin.css';
-import { getServerSession } from 'next-auth';
-import { redirect } from 'next/navigation';
 
 export const metadata = {
   title: { default: 'Admin · yuknikah', template: '%s · Admin · yuknikah' },
   description: 'Kelola undangan, tamu, RSVP, ucapan, media, dan check-in.',
 };
 
-export default async function AdminLayout({ children }) {
-  const session = await getServerSession();
-  if (!session) redirect('/login');
-
+export default function AdminLayout({ children }) {
   return (
     <section className="admin-shell">
       <aside className="admin-aside">
