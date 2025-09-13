@@ -1,6 +1,6 @@
 // app/registrasi/page.js
-import Header from '../../components/Header'; // <-- Path disesuaikan
-import RegisterForm from '../../components/RegisterForm'; // <-- Path disesuaikan
+import Header from '@/components/Header'; // <-- GUNAKAN PATH INI
+import RegisterForm from '@/components/RegisterForm'; // <-- GUNAKAN PATH INI
 import { Container, Row, Col, Card } from 'react-bootstrap';
 
 export const metadata = {
