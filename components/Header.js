@@ -12,10 +12,10 @@ export default function Header() {
            <Image 
             src="/logo-yuknikah.png"
             alt="yuknikah.id Logo"
-            width={500}
-            height={500}
+            width={200}
+            height={200}
             priority
-            style={{ width: 'auto', height: '500px' }} // Memastikan tinggi konsisten
+            style={{ width: 'auto', height: '200px' }} // Memastikan tinggi konsisten
           />
         </Navbar.Brand>
         <div className="d-flex d-lg-none">
