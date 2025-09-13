@@ -1,17 +1,21 @@
 // app/template/[category]/page.js
 import Header from '@/components/Header';
-import TemplateCard from '@/components/TemplateCard'; // <-- Impor komponen baru
+import TemplateCard from '@/components/TemplateCard';
 import { Container, Row, Col, Button, Form, InputGroup } from 'react-bootstrap';
 
-// CONTOH DATA TEMPLATE YANG LEBIH LENGKAP
-// Nanti, Anda akan mengambil data ini dari database
+// DATA DUMMY YANG LEBIH LENGKAP UNTUK SEMUA KATEGORI
 const allTemplates = [
+  // Pernikahan
   { id: 1, name: 'Super-Classic', category: 'pernikahan', uses: 19505, image: '/sampul/1.webp', link: '/s/1952/undangan/161?kpd=Bapak%20Budi' },
   { id: 2, name: 'Elegan-Grey', category: 'pernikahan', uses: 4275, image: '/sampul/2.webp', link: '/s/1952/undangan/79?kpd=Bapak%20Budi' },
   { id: 3, name: 'Black-Java', category: 'pernikahan', uses: 3500, image: '/sampul/3.webp', link: '/s/1952/undangan/82?kpd=Bapak%20Budi' },
-  { id: 4, name: 'Aesthetic-Romance', category: 'pernikahan', uses: 3210, image: '/sampul/1.webp', link: '/s/1952/undangan/199?kpd=Bapak%20Budi' },
-  { id: 5, name: 'Sunatan Ceria', category: 'khitanan', uses: 5000, image: '/sampul/2.webp', link: '#' },
-  { id: 6, name: 'Ulang Tahun Dino', category: 'ulang-tahun-anak', uses: 8900, image: '/sampul/3.webp', link: '#' },
+  // Khitanan
+  { id: 4, name: 'Sunatan Ceria', category: 'khitanan', uses: 5000, image: '/sampul/1.webp', link: '#' },
+  // Ulang Tahun
+  { id: 5, name: 'Ulang Tahun Dino', category: 'ulang-tahun-anak', uses: 8900, image: '/sampul/2.webp', link: '#' },
+  { id: 6, name: 'Sweet Seventeen', category: 'ulang-tahun-dewasa', uses: 6100, image: '/sampul/3.webp', link: '#' },
+  // Natal
+  { id: 7, name: 'Christmas Joy', category: 'natal', uses: 12000, image: '/sampul/1.webp', link: '#' },
 ];
 
 export const metadata = {
@@ -25,16 +29,17 @@ export default function CategoryTemplatePage({ params }) {
   // Membersihkan nama kategori untuk ditampilkan, contoh: 'Undangan Pernikahan'
   const formattedTitle = categorySlug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 
-  // Logika untuk filter template berdasarkan kategori dari URL
-  // Ini akan diganti dengan query database di masa depan
+  // LOGIKA FILTER BARU
+  // Menghapus 'undangan-' dari slug untuk mencocokkan dengan data
+  const filterCategory = categorySlug.replace('undangan-', '');
   const templatesToShow = allTemplates.filter(template => 
-    template.category === categorySlug.replace('undangan-', '')
+    template.category === filterCategory
   );
 
   return (
     <div>
       <Header />
-      <main style={{ paddingTop: '100px', paddingBottom: '60px', backgroundColor: '#f8f9fa' }}>
+      <main style={{ paddingTop: '100px', paddingBottom: '60px' }}>
         <Container>
           <div className="text-center mb-5">
             <p className="text-muted">PILIH TEMA</p>
@@ -62,7 +67,10 @@ export default function CategoryTemplatePage({ params }) {
                         <TemplateCard key={template.id} template={template} />
                         ))
                     ) : (
-                        <p className="text-center text-muted">Belum ada template untuk kategori ini.</p>
+                        <div className="text-center py-5">
+                            <p className="fs-4 text-muted">Oops!</p>
+                            <p className="text-muted">Belum ada template untuk kategori ini.</p>
+                        </div>
                     )}
                 </div>
             </Col>
