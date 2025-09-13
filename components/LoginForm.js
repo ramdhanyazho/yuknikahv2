@@ -1,4 +1,3 @@
-// components/LoginForm.js
 'use client';
 
 import { useState } from 'react';
@@ -17,7 +16,6 @@ export default function LoginForm({ onRegisterClick }) {
     const email = e.target.email.value;
     const password = e.target.password.value;
 
-    // panggil NextAuth credentials provider
     const res = await signIn('credentials', {
       redirect: false,
       email,
@@ -30,7 +28,6 @@ export default function LoginForm({ onRegisterClick }) {
     if (res?.error) {
       setErrorMessage('Email atau password salah');
     } else {
-      // redirect manual kalau sukses
       window.location.href = '/dashboard';
     }
   };
@@ -42,7 +39,6 @@ export default function LoginForm({ onRegisterClick }) {
           Silakan masuk untuk melanjutkan
         </h3>
 
-        {/* Form login manual */}
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="email">
             <Form.Control
@@ -71,11 +67,7 @@ export default function LoginForm({ onRegisterClick }) {
           </div>
 
           <div className="d-flex justify-content-between mt-3">
-            <Button
-              variant="link"
-              className="p-0"
-              onClick={onRegisterClick}
-            >
+            <Button variant="link" className="p-0" onClick={onRegisterClick}>
               Registrasi Manual
             </Button>
             <a href="/lupa-password" className="small">
@@ -90,17 +82,14 @@ export default function LoginForm({ onRegisterClick }) {
           )}
         </Form>
 
-        <div className="text-center text-muted my-3">or</div>
+        <div className="text-center text-muted my-3">atau</div>
 
-        {/* Login pakai Google */}
         <div className="d-grid">
           <Button
             variant="outline-secondary"
-            onClick={() =>
-              signIn('google', { callbackUrl: '/dashboard' })
-            }
+            onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
           >
-            Sign in with Google
+            Sign in dengan Google
           </Button>
         </div>
       </Card.Body>

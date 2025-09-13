@@ -1,83 +1,73 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from 'react';
+import { Form, Button, Alert } from 'react-bootstrap';
+import { registerUser } from '@/app/actions/registerUser';
 
-export default function RegisterForm() {
+export default function RegisterForm({ onSuccess }) {
   const [message, setMessage] = useState(null);
   const [success, setSuccess] = useState(false);
-  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage(null);
 
     const formData = new FormData(e.target);
-    const body = Object.fromEntries(formData);
+    const res = await registerUser(formData);
 
-    console.log("📤 Sending:", body);
+    setMessage(res.message);
+    setSuccess(res.success);
 
-    const res = await fetch("/api/register", {
-      method: "POST",
-      body: JSON.stringify(body),
-      headers: { "Content-Type": "application/json" },
-    });
-
-    const data = await res.json();
-    console.log("📥 Response:", data);
-
-    setMessage(data.message);
-    setSuccess(data.success);
+    if (res.success && onSuccess) {
+      onSuccess();
+    }
   };
 
-  // Auto redirect jika sukses
-  useEffect(() => {
-    if (success) {
-      const timer = setTimeout(() => {
-        router.push("/login");
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [success, router]);
-
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <input
-        type="text"
-        name="name"
-        placeholder="Name"
-        className="border p-2 w-full"
-        required
-      />
-      <input
-        type="email"
-        name="email"
-        placeholder="Email"
-        className="border p-2 w-full"
-        required
-      />
-      <input
-        type="password"
-        name="password"
-        placeholder="Password"
-        className="border p-2 w-full"
-        required
-      />
-      <button
-        type="submit"
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-      >
-        Register
-      </button>
+    <Form onSubmit={handleSubmit}>
+      <h3 className="fw-bold mb-4 text-center font-script">
+        Registrasi Akun Baru
+      </h3>
 
       {message && (
-        <p
-          className={`mt-2 text-sm ${
-            success ? "text-green-600" : "text-red-600"
-          }`}
-        >
-          {message}
-        </p>
+        <Alert variant={success ? 'success' : 'danger'}>{message}</Alert>
       )}
-    </form>
+
+      <Form.Group className="mb-3">
+        <Form.Control
+          type="text"
+          name="name"
+          placeholder="Name"
+          size="lg"
+          required
+        />
+      </Form.Group>
+
+      <Form.Group className="mb-3">
+        <Form.Control
+          type="email"
+          name="email"
+          placeholder="Email Address"
+          size="lg"
+          required
+        />
+      </Form.Group>
+
+      <Form.Group className="mb-3">
+        <Form.Control
+          type="password"
+          name="password"
+          placeholder="Password"
+          size="lg"
+          required
+        />
+      </Form.Group>
+
+      <div className="d-grid">
+        <Button variant="primary" type="submit" size="lg">
+          Register
+        </Button>
+      </div>
+    </Form>
   );
 }
