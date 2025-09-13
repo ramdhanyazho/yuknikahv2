@@ -1,43 +1,45 @@
-// components/LoginForm.js
+// components/RegisterForm.js
 'use client';
+import { Form, Button } from 'react-bootstrap';
 
-import { Button, Form, Row, Col, Card } from 'react-bootstrap';
-import Image from 'next/image';
-
-export default function LoginForm() {
+export default function RegisterForm() {
   return (
-    <Card className="shadow-lg border-0 rounded-4">
-      <Card.Body className="p-5">
-        <h3 className="fw-bold mb-4 text-center">Silakan masuk untuk melanjutkan</h3>
-        <Form>
-          <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Control type="email" placeholder="Username or Email" size="lg" />
-          </Form.Group>
+    <Form>
+      <h3 className="fw-bold mb-4 text-center">Silakan registrasi untuk melanjutkan</h3>
+      
+      <Form.Group className="mb-3" controlId="registerName">
+        <Form.Control type="text" placeholder="Name" size="lg" />
+      </Form.Group>
+      
+      <Form.Group className="mb-3" controlId="registerEmail">
+        <Form.Control type="email" placeholder="Email Address" size="lg" />
+      </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Control type="password" placeholder="Password" size="lg" />
-          </Form.Group>
-          
-          <div className="d-grid mt-4">
-            <Button variant="primary" type="submit" size="lg">
-              Login
-            </Button>
-          </div>
+      <Form.Group className="mb-3" controlId="registerPassword">
+        <Form.Control type="password" placeholder="Password" size="lg" />
+      </Form.Group>
 
-          <div className="d-flex justify-content-between mt-3">
-            <a href="/registrasi" className="small">Registrasi Manual</a>
-            <a href="/lupa-password" className="small">Lupa Password?</a>
-          </div>
+      <Form.Group className="mb-3" controlId="registerConfirmPassword">
+        <Form.Control type="password" placeholder="Confirm Password" size="lg" />
+      </Form.Group>
+      
+      <div className="d-flex justify-content-end mb-3">
+        <small>Sudah punya akun? <a href="/login">Login</a></small>
+      </div>
 
-          <div className="text-center text-muted my-3">or</div>
+      <div className="d-grid">
+        <Button variant="primary" type="submit" size="lg">
+          Register
+        </Button>
+      </div>
 
-           <div className="d-grid">
-             <Button variant="outline-secondary">
-                Sign in with Google
-             </Button>
-          </div>
-        </Form>
-      </Card.Body>
-    </Card>
+      <div className="text-center text-muted my-3">or</div>
+
+       <div className="d-grid">
+         <Button variant="outline-secondary">
+            Sign in with Google
+         </Button>
+      </div>
+    </Form>
   );
 }
