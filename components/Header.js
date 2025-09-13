@@ -2,37 +2,36 @@
 'use client';
 
 import Image from 'next/image';
-import { Navbar, Nav, NavDropdown, Container, Button } from 'react-bootstrap';
+import { Navbar, Nav, Container, Button } from 'react-bootstrap';
 
 export default function Header() {
   return (
-    <Navbar bg="white" expand="lg" className="shadow-sm fixed-top">
+    <Navbar bg="white" expand="lg" className="shadow-sm fixed-top" style={{ padding: '0.75rem 0' }}>
       <Container>
         <Navbar.Brand href="/">
            <Image 
-            src="/logo-yuknikah.png" // Mengambil dari folder /public
+            src="/logo-yuknikah.png"
             alt="yuknikah.id Logo"
-            // SESUAIKAN ANGKA INI dengan rasio gambar Anda setelah di-crop
-            // Coba dengan angka ini dulu, lalu ubah jika perlu.
-            width={150} 
+            width={150}
             height={40}
             priority
-            style={{ height: 'auto', width: 'auto' }} // Menjaga rasio aspek
+            style={{ width: 'auto', height: '40px' }} // Memastikan tinggi konsisten
           />
         </Navbar.Brand>
         <div className="d-flex d-lg-none">
-            <Button variant="dark" href="/registrasi">Uji Coba Gratis</Button>
-            <Navbar.Toggle aria-controls="main-navbar" className="ms-2" />
+            <Button variant="dark" href="/registrasi" size="sm">Uji Coba Gratis</Button>
+            <Navbar.Toggle aria-controls="main-navbar" className="ms-2 border-0" />
         </div>
         <Navbar.Collapse id="main-navbar">
-          <Nav className="mx-auto">
+          {/* NAVIGASI SUDAH DISESUAIKAN */}
+          <Nav className="mx-auto fw-semibold">
             <Nav.Link href="/">Home</Nav.Link>
             <Nav.Link href="/harga">Harga</Nav.Link>
             <Nav.Link href="/template">Template</Nav.Link>
             <Nav.Link href="/artikel">Artikel</Nav.Link>
             <Nav.Link href="/login">Login</Nav.Link>
           </Nav>
-          <Button variant="dark" href="/registrasi" className="d-none d-lg-block">Uji Coba Gratis</Button>
+          <Button variant="dark" href="/registrasi" className="d-none d-lg-block fw-semibold px-4">Uji Coba Gratis</Button>
         </Navbar.Collapse>
       </Container>
     </Navbar>

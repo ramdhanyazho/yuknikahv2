@@ -26,6 +26,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="id">
       {/* Menggabungkan kedua variabel font ke dalam body */}
+      {/* font-sans akan menjadi default, dan font-script bisa dipanggil saat dibutuhkan */}
       <body className={`${poppins.variable} ${dancingScript.variable} font-sans`}>
         {children}
       </body>
