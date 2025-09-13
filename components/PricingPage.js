@@ -2,117 +2,71 @@
 'use client';
 
 import { useState } from 'react';
-import { Container, Row, Col, Card, Button, Form } from 'react-bootstrap';
-import { Splide, SplideSlide } from '@splidejs/react-splide';
 
 // Data untuk paket harga "Satuan"
 const satuanPackages = [
   { name: 'Free', price: '0', description: 'Uji coba gratis tanpa batasan waktu', features: ['Akses Seluruh Tema', 'Ubah Nama Tamu', 'Tanpa Masa Aktif', 'RSVP & Ucapan'], primary: false },
-  { name: 'Basic', price: '39.000', description: 'Tanpa musik, titip hadiah dan foto', features: ['Semua Fitur Free', 'Bisa Disebar'], primary: false },
-  { name: 'Pro', price: '69.000', description: 'Bisa foto galery dan titip hadiah', features: ['Semua Fitur Basic', 'Foto Gallery', 'Rekening Titip Hadiah', 'Musik'], primary: true }, // Paket populer
-  { name: 'Premium', price: '119.000', description: 'Semua fitur bisa dipakai tanpa batas', features: ['Semua Fitur Pro', 'Unlimited Revisi', 'Custom Musik', 'Love Story'], primary: false },
-];
-
-// Data untuk paket harga "Berlangganan"
-const langgananPackages = [
-    { name: '1 Bulan', price: '150.000', description: 'Bebas buat banyak undangan', features: ['Fitur Premium', 'Akses Semua Fitur', 'Export Undangan Cetak', 'Custom Domain'], primary: false },
-    { name: '3 Bulan', price: '400.000', description: 'Hemat lebih banyak', features: ['Fitur Premium', 'Akses Semua Fitur', 'Export Undangan Cetak', 'Custom Domain'], primary: true },
-    { name: '6 Bulan', price: '750.000', description: 'Untuk bisnis Anda', features: ['Fitur Premium', 'Akses Semua Fitur', 'Export Undangan Cetak', 'Custom Domain'], primary: false },
+  { name: 'Basic', price: '39.000', description: 'Tanpa musik & titip hadiah', features: ['Semua Fitur Free', 'Bisa Disebar'], primary: false },
+  { name: 'Pro', price: '69.000', description: 'Bisa foto galery & titip hadiah', features: ['Semua Fitur Basic', 'Foto Gallery', 'Rekening Titip Hadiah', 'Musik'], primary: true },
+  { name: 'Premium', price: '119.000', description: 'Semua fitur tanpa batas', features: ['Semua Fitur Pro', 'Unlimited Revisi', 'Custom Musik', 'Love Story'], primary: false },
 ];
 
 // Komponen Card untuk setiap paket
 function PriceCard({ name, price, description, features, primary }) {
-  // Menambahkan border dan shadow jika ini paket utama/populer
   const cardClass = primary 
-    ? "shadow-lg rounded-4 border-2 border-primary h-100" 
-    : "shadow rounded-4 border border-light h-100";
+    ? "bg-white p-8 rounded-xl shadow-2xl border-2 border-theme-pink transform scale-105" 
+    : "bg-white p-8 rounded-xl shadow-lg";
 
   return (
-    <Card className={cardClass}>
-      <Card.Body className="p-0 text-center d-flex flex-column">
-        <div className="container text-center py-4">
-          <p style={{ fontSize: '2em', fontWeight: 600 }} className="text-dark">{name}</p>
-          <p style={{ fontSize: '0.8em' }} className="fst-italic text-muted">{description}</p>
-        </div>
-        <div className={primary ? "bg-primary text-white text-center py-3" : "bg-light text-primary text-center py-3"}>
-          <p className="fw-bold m-0" style={{ fontSize: '2.8em' }}>
-            <span className="fs-6 fw-light align-top">Rp.</span>{price}
-          </p>
-        </div>
-        <div className="container px-4 text-start mt-4 flex-grow-1">
-          {features.map((feature, index) => (
-            <div key={index} className="d-flex align-items-center mb-2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-check-circle-fill text-success" viewBox="0 0 16 16">
-                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
-              </svg>
-              <div className="ps-2 text-muted">{feature}</div>
-            </div>
-          ))}
-        </div>
-         <div className="mt-4 p-4">
-            <Button variant={primary ? "primary" : "outline-primary"} className="w-100">Pilih Paket</Button>
-        </div>
-      </Card.Body>
-    </Card>
+    <div className={cardClass}>
+      <h3 className="text-2xl font-semibold text-theme-dark-text">{name}</h3>
+      <p className="mt-2 text-gray-500">{description}</p>
+      <div className="mt-6 bg-theme-pink text-white rounded-lg p-4 text-center">
+        <span className="text-xl">Rp.</span>
+        <span className="text-5xl font-bold">{price}</span>
+      </div>
+      <ul className="mt-8 space-y-4">
+        {features.map((feature, index) => (
+          <li key={index} className="flex items-center">
+            <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+            <span className="ml-3 text-gray-600">{feature}</span>
+          </li>
+        ))}
+      </ul>
+      <button className={`w-full mt-8 py-3 rounded-lg font-semibold text-lg ${primary ? 'bg-theme-pink text-white hover:opacity-90' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>
+        Pilih Paket
+      </button>
+    </div>
   );
 }
 
+
 export default function PricingPage() {
-  const [isSubscription, setIsSubscription] = useState(false);
-  const packages = isSubscription ? langgananPackages : satuanPackages;
+  // State untuk toggle belum kita buat, fokus ke tampilan dulu
+  // const [isSubscription, setIsSubscription] = useState(false);
+  const packages = satuanPackages;
 
   return (
-    // Mengubah background utama menjadi abu-abu sangat muda (light)
-    <section className="py-5 bg-light" style={{ marginTop: '70px' }}>
-      <Container>
-        <div className="text-center text-dark mb-5">
-            <h1 className="display-4 fw-bold">Harga Undangan Online di yuknikah.id</h1>
-            <p className="lead text-muted">
-                Temukan paket harga undangan digital yang sesuai dengan kebutuhan Anda!
+    <section className="py-20" style={{ marginTop: '70px' }}>
+      <div className="container mx-auto px-6">
+        <div className="text-center text-theme-dark-text mb-12">
+            <h1 className="text-5xl font-bold font-script">Harga Undangan Online</h1>
+            <p className="lead text-gray-600 mt-4 text-xl">
+                Temukan paket yang sesuai dengan kebutuhan Anda!
             </p>
         </div>
       
-        <div className="d-flex justify-content-center align-items-center my-5">
-            <label style={{ fontSize: '1.5rem' }} className={!isSubscription ? 'text-dark fw-bold' : 'text-muted'}>Satuan</label>
-            <Form.Check
-                type="switch"
-                id="pricing-switch"
-                className="mx-3"
-                style={{ transform: 'scale(1.5)' }}
-                checked={isSubscription}
-                onChange={() => setIsSubscription(!isSubscription)}
-            />
-            <label style={{ fontSize: '1.5rem' }} className={isSubscription ? 'text-dark fw-bold' : 'text-muted'}>Berlangganan</label>
-        </div>
-      </Container>
-      
-      <Container>
-         {/* Tampilan Desktop (Grid) */}
-         <Row className="d-none d-lg-flex">
+        {/* Kita akan tampilkan dalam grid, bukan carousel, agar lebih elegan di semua perangkat */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {packages.map((pkg, index) => (
-                <Col key={index} lg={3} md={6} className="mb-4">
+                <div key={index}>
                     <PriceCard {...pkg} />
-                </Col>
+                </div>
             ))}
-        </Row>
-        
-        {/* Tampilan Mobile (Carousel) */}
-        <div className="d-lg-none">
-            <Splide options={{
-                perPage: 1,
-                gap: '1rem',
-                pagination: true,
-                arrows: false,
-                padding: '2rem',
-            }}>
-                {packages.map((pkg, index) => (
-                    <SplideSlide key={index}>
-                        <PriceCard {...pkg} />
-                    </SplideSlide>
-                ))}
-            </Splide>
         </div>
-      </Container>
+      </div>
     </section>
   );
 }

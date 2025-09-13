@@ -1,110 +1,20 @@
-/* app/globals.css */
-:root {
-  --bg: #0b0b0c;
-  --panel: #111214;
-  --panel-2: #16171a;
-  --text: #e8e8e8;
-  --muted: #a1a1aa;
-  --accent: #6ee7b7;
-  --accent-2: #38bdf8;
-  --border: #232327;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
+
+body {
+  background-color: #f8f9fa; /* Warna latar belakang abu-abu sangat muda */
+  color: #333333; /* Warna teks utama */
 }
 
-* { box-sizing: border-box; }
-html, body {
-  padding: 0;
-  margin: 0;
-  color-scheme: light dark;
-  background: var(--bg);
-  color: var(--text);
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Menggunakan variabel font yang kita definisikan di layout.js */
+.font-sans {
+  font-family: var(--font-poppins), sans-serif;
 }
 
-a {
-  color: var(--accent-2);
-  text-decoration: none;
-}
-a:hover { text-decoration: underline; }
-
-.container {
-  max-width: 1040px;
-  margin: 0 auto;
-  padding: 24px 16px;
-}
-
-.hero {
-  padding: 64px 0 32px;
-  text-align: center;
-}
-.hero h1 {
-  font-size: clamp(28px, 4vw, 40px);
-  line-height: 1.2;
-  margin: 0 0 12px;
-}
-.hero p {
-  color: var(--muted);
-  margin: 0 0 20px;
-}
-
-.actions {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--panel);
-  color: var(--text);
-}
-.btn:hover {
-  background: var(--panel-2);
-  text-decoration: none;
-}
-.btn.primary {
-  background: linear-gradient(180deg, #1e293b, #0f172a);
-  border-color: #263043;
-}
-.btn.accent {
-  background: #083344;
-  border-color: #0b4a63;
-  color: #b9f2ff;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-}
-.card {
-  border: 1px solid var(--border);
-  background: var(--panel);
-  border-radius: 12px;
-  padding: 16px;
-}
-.card h3 {
-  margin: 0 0 8px;
-  font-size: 16px;
-}
-.card p {
-  margin: 0;
-  color: var(--muted);
-}
-
-.section {
-  padding: 24px 0;
-  border-top: 1px solid var(--border);
-}
-
-@media (max-width: 960px) {
-  .grid { grid-template-columns: 1fr; }
+.font-script {
+  font-family: var(--font-dancing-script), cursive;
 }

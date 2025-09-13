@@ -1,26 +1,31 @@
-// app/layout.js (Versi Baru)
-
-import 'bootstrap/dist/css/bootstrap.min.css';
+// app/layout.js
 import './globals.css';
-// SessionProvider bisa diaktifkan kembali jika dibutuhkan untuk login
-// import { SessionProvider } from './providers/SessionProvider'; 
-import { Inter } from 'next/font/google';
+import { Poppins, Dancing_Script } from 'next/font/google';
 
-const inter = Inter({ subsets: ['latin'] });
+// Konfigurasi font
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['400', '600', '700'],
+  variable: '--font-poppins', // Nama variabel untuk body
+});
 
-// Metadata sudah disesuaikan dengan nama baru 'yuknikah.id'
+const dancingScript = Dancing_Script({
+  subsets: ['latin'],
+  weight: ['700'],
+  variable: '--font-dancing-script', // Nama variabel untuk judul/script
+});
+
 export const metadata = {
-  title: { default: 'yuknikah.id — Undangan Digital', template: '%s · yuknikah.id' },
-  description: 'Buat undangan digital gratis untuk segala acara tanpa ribet.',
+  title: 'yuknikah.id — Undangan Digital',
+  description: 'Buat undangan digital elegan sesuai gaya Anda.',
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="id">
-      <body className={inter.className}>
-        {/* <SessionProvider> */}
-          {children}
-        {/* </Session-Provider> */}
+      {/* Menggabungkan variabel font di body */}
+      <body className={`${poppins.variable} ${dancingScript.variable} font-sans`}>
+        {children}
       </body>
     </html>
   );
