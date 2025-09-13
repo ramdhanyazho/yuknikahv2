@@ -1,4 +1,3 @@
-// app/dashboard/layout.js
 'use client'; // <-- TAMBAHKAN BARIS INI
 
 import { useState } from 'react';
@@ -6,7 +5,6 @@ import { Container, Row, Col, Nav, Navbar, Button, Offcanvas } from 'react-boots
 import Image from 'next/image';
 import Link from 'next/link';
 
-// Komponen Sidebar Navigasi
 function SidebarNav() {
     return (
         <Nav className="flex-column" style={{ minHeight: '100vh', backgroundColor: '#f8f9fa', padding: '1.5rem' }}>
@@ -26,42 +24,28 @@ function SidebarNav() {
 
 export default function DashboardLayout({ children }) {
   const [show, setShow] = useState(false);
-
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   return (
     <Container fluid>
       <Row>
-        {/* Sidebar untuk Desktop */}
         <Col lg={2} className="d-none d-lg-block p-0">
           <SidebarNav />
         </Col>
-
-        {/* Konten Utama */}
         <Col lg={10} md={12} style={{ padding: '1.5rem' }}>
-          {/* Header untuk Mobile & Tablet */}
           <Navbar bg="light" className="d-lg-none mb-3">
             <Container fluid>
-              <Button variant="outline-secondary" onClick={handleShow}>
-                ☰
-              </Button>
-              <Navbar.Text className="fw-bold">
-                Nama Pengguna {/* Ganti dengan nama user dinamis nanti */}
-              </Navbar.Text>
+              <Button variant="outline-secondary" onClick={handleShow}>☰</Button>
+              <Navbar.Text className="fw-bold">Nama Pengguna</Navbar.Text>
             </Container>
           </Navbar>
-
-           {/* Offcanvas Sidebar untuk Mobile */}
-            <Offcanvas show={show} onHide={handleClose} placement="start">
-                <Offcanvas.Header closeButton>
-                    <Offcanvas.Title>Menu</Offcanvas.Title>
-                </Offcanvas.Header>
-                <Offcanvas.Body>
-                    <SidebarNav />
-                </Offcanvas.Body>
-            </Offcanvas>
-
+          <Offcanvas show={show} onHide={handleClose} placement="start">
+            <Offcanvas.Header closeButton>
+                <Offcanvas.Title>Menu</Offcanvas.Title>
+            </Offcanvas.Header>
+            <Offcanvas.Body><SidebarNav /></Offcanvas.Body>
+          </Offcanvas>
           {children}
         </Col>
       </Row>
