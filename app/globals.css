@@ -2,15 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Import Google Font (opsional, tapi disarankan untuk font logo) */
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
 
 body {
-  background-color: #f8f9fa; /* Warna latar belakang abu-abu sangat muda */
-  color: #333333; /* Warna teks utama */
+  background-color: #f8f9fa; /* Warna latar abu-abu sangat muda */
+  color: #333333; /* Warna teks utama gelap */
 }
 
-/* Menggunakan variabel font yang kita definisikan di layout.js */
 .font-sans {
   font-family: var(--font-poppins), sans-serif;
 }
