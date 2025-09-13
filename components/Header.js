@@ -10,11 +10,14 @@ export default function Header() {
       <Container>
         <Navbar.Brand href="/">
            <Image 
-            src="/logo-yuknikah.png"
+            src="/logo-yuknikah.png" // Mengambil dari folder /public
             alt="yuknikah.id Logo"
-            width={150}
+            // SESUAIKAN ANGKA INI dengan rasio gambar Anda setelah di-crop
+            // Coba dengan angka ini dulu, lalu ubah jika perlu.
+            width={150} 
             height={40}
             priority
+            style={{ height: 'auto', width: 'auto' }} // Menjaga rasio aspek
           />
         </Navbar.Brand>
         <div className="d-flex d-lg-none">
