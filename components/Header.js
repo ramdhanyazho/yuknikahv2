@@ -12,8 +12,8 @@ export default function Header() {
            <Image 
             src="/logo-yuknikah.png"
             alt="yuknikah.id Logo"
-            width={150}
-            height={150}
+            width={55}
+            height={55}
             priority
             style={{ width: 'auto', height: '55x' }} // Memastikan tinggi konsisten
           />
