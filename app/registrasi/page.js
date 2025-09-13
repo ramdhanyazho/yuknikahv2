@@ -1,8 +1,7 @@
 // app/registrasi/page.js
-import Header from '@/components/Header';
-import RegisterForm from '@/components/RegisterForm';
+import Header from '../../components/Header'; // <-- Path disesuaikan
+import RegisterForm from '../../components/RegisterForm'; // <-- Path disesuaikan
 import { Container, Row, Col, Card } from 'react-bootstrap';
-import Image from 'next/image';
 
 export const metadata = {
   title: 'Registrasi | yuknikah.id',
