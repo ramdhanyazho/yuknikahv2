@@ -1,47 +1,38 @@
 // components/Header.js
-'use client';
-
 import Link from 'next/link';
-import { Navbar, Nav, NavDropdown, Container, Button } from 'react-bootstrap';
+import Image from 'next/image';
 
 export default function Header() {
   return (
-    <Navbar bg="white" expand="lg" className="shadow-sm fixed-top">
-      <Container fluid className="mx-xl-5">
-        
-        {/* BAGIAN INI SUDAH DIUBAH SESUAI PERMINTAAN ANDA */}
-        <Navbar.Brand href="/">
-          <span className="fw-bold fs-4 text-dark">
-            yuknikah.id
-          </span>
-        </Navbar.Brand>
-        
-        <div className="d-flex d-lg-none">
-          <Button variant="primary" className="me-2">Uji Coba Gratis</Button>
-          <Navbar.Toggle aria-controls="navbarSupportedContent" />
+    <header className="bg-white shadow-sm sticky top-0 z-50">
+      <nav className="container mx-auto px-6 py-2 flex justify-between items-center">
+        {/* Logo Baru */}
+        <Link href="/">
+          <Image 
+            src="/logo-yuknikah.png" // Memastikan path ini benar
+            alt="yuknikah.id Logo"
+            width={180}
+            height={50}
+            priority // Membuat logo dimuat lebih cepat
+          />
+        </Link>
+
+        {/* Menu Navigasi (Desktop) */}
+        <div className="hidden md:flex items-center space-x-8 text-lg">
+          <Link href="/" className="text-gray-600 hover:text-pink-400">Home</Link>
+          <Link href="/harga" className="text-gray-600 hover:text-pink-400">Harga</Link>
+          <Link href="/template" className="text-gray-600 hover:text-pink-400">Template</Link>
+          <Link href="/artikel" className="text-gray-600 hover:text-pink-400">Artikel</Link>
+          <Link href="/login" className="text-gray-600 hover:text-pink-400">Login</Link>
         </div>
-        
-        <Navbar.Collapse id="navbarSupportedContent">
-          <Nav className="mx-auto">
-            <Nav.Link href="/">Home</Nav.Link>
-            <Nav.Link href="/harga">Harga</Nav.Link>
-            <Nav.Link href="/contoh">Contoh</Nav.Link>
-            <NavDropdown title="Tools" id="tools-dropdown">
-              <NavDropdown.Item href="/tools/ai-photo">Ubah Foto Jadi AI</NavDropdown.Item>
-              <NavDropdown.Item href="/tools/chat-ai">Buat Undangan Di Chat AI</NavDropdown.Item>
-            </NavDropdown>
-            <NavDropdown title="Template" id="template-dropdown">
-              <NavDropdown.Item href="/template/website">Website</NavDropdown.Item>
-              <NavDropdown.Item href="/template/video">Video</NavDropdown.Item>
-            </NavDropdown>
-            <Nav.Link href="/tutorial">Tutorial</Nav.Link>
-            <Nav.Link href="/artikel">Artikel</Nav.Link>
-            <Nav.Link href="/registrasi">Registrasi</Nav.Link>
-            <Nav.Link href="/login">Login</Nav.Link>
-          </Nav>
-          <Button variant="primary" className="d-none d-lg-block">Uji Coba Gratis</Button>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+
+        {/* Tombol Aksi (Desktop) */}
+        <div className="hidden md:flex">
+          <Link href="/registrasi" className="bg-pink-400 text-white px-6 py-2 rounded-full hover:bg-pink-500 transition-colors">
+            Uji Coba Gratis
+          </Link>
+        </div>
+      </nav>
+    </header>
   );
 }

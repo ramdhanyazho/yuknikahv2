@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Import Google Font */
+/* Import Google Font (opsional, tapi disarankan untuk font logo) */
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
 
 body {

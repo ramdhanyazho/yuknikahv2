@@ -1,4 +1,3 @@
-// app/layout.js
 import './globals.css';
 import { Poppins, Dancing_Script } from 'next/font/google';
 
