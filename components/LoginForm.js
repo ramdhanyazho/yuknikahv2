@@ -1,4 +1,3 @@
-// components/LoginForm.js
 'use client';
 import { Form, Button } from 'react-bootstrap';
 
@@ -6,7 +5,7 @@ export default function LoginForm() {
   return (
     <Form>
       <h3 className="fw-bold mb-4 text-center">Login ke akun Anda</h3>
-      
+
       <Form.Group className="mb-3" controlId="loginEmail">
         <Form.Control type="email" placeholder="Email Address" size="lg" />
       </Form.Group>
@@ -15,8 +14,13 @@ export default function LoginForm() {
         <Form.Control type="password" placeholder="Password" size="lg" />
       </Form.Group>
 
-      <div className="d-flex justify-content-end mb-3">
-        <small>Belum punya akun? <a href="/registrasi">Registrasi</a></small>
+      <div className="d-flex justify-content-between mb-3">
+        <small>
+          Belum punya akun? <a href="/registrasi">Daftar</a>
+        </small>
+        <small>
+          <a href="/forgot-password">Lupa Password?</a>
+        </small>
       </div>
 
       <div className="d-grid">
@@ -25,7 +29,7 @@ export default function LoginForm() {
         </Button>
       </div>
 
-      <div className="text-center text-muted my-3">or</div>
+      <div className="text-center text-muted my-3">atau</div>
 
       <div className="d-grid">
         <Button variant="outline-secondary">
