@@ -1,32 +1,28 @@
-// app/login/page.js
+'use client'; // <-- TAMBAHKAN BARIS INI
+
 import Header from '@/components/Header';
 import LoginForm from '@/components/LoginForm';
-import { Container, Row, Col, Card } from 'react-bootstrap';
-
-export const metadata = {
-  title: 'Login | yuknikah.id',
-  description: 'Masuk ke akun yuknikah.id',
-};
+import { Container, Row, Col } from 'react-bootstrap';
+import Image from 'next/image';
 
 export default function LoginPage() {
   return (
     <div>
       <Header />
-      <main
-        style={{
-          paddingTop: '120px',
-          paddingBottom: '60px',
-          backgroundColor: '#f8f9fa',
-        }}
-      >
+      <main style={{ paddingTop: '120px', paddingBottom: '60px', backgroundColor: '#f8f9fa' }}>
         <Container>
-          <Row className="justify-content-center">
+          <Row className="align-items-center justify-content-center">
+            <Col lg={6} className="d-none d-lg-block">
+              <Image 
+                src="https://placehold.co/600x400/EFEFEF/333333?text=Gambar+Login"
+                alt="Login illustration"
+                width={600}
+                height={400}
+                className="img-fluid rounded-4"
+              />
+            </Col>
             <Col lg={6} md={8}>
-              <Card className="shadow-lg border-0 rounded-4">
-                <Card.Body className="p-5">
-                  <LoginForm />
-                </Card.Body>
-              </Card>
+              <LoginForm />
             </Col>
           </Row>
         </Container>
