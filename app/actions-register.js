@@ -14,7 +14,7 @@ const RegisterSchema = z.object({
 });
 
 export async function registerUser(prevState, formData) {
-  // 1. Validasi input
+  // 1. Validasi input dari form
   const validatedFields = RegisterSchema.safeParse(
     Object.fromEntries(formData.entries())
   );
@@ -29,25 +29,25 @@ export async function registerUser(prevState, formData) {
   const { name, email, password } = validatedFields.data;
 
   try {
-    // 2. Hash password
+    // 2. Enkripsi (hash) password sebelum disimpan
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // 3. Simpan ke database Turso
+    // 3. Simpan pengguna baru ke database Turso
     await db.insert(users).values({
       name: name,
       email: email,
       password: hashedPassword,
-      role: 'CLIENT', // Role default
+      role: 'CLIENT', // Role default untuk pengguna baru
     });
 
   } catch (e) {
-    // Tangani jika email sudah terdaftar
+    // Tangani jika email sudah terdaftar (error constraint unique)
     if (e.message.includes('UNIQUE constraint failed: users.email')) {
       return { message: 'Email ini sudah terdaftar.' };
     }
-    return { message: 'Terjadi kesalahan pada database.' };
+    return { message: 'Terjadi kesalahan pada database, silakan coba lagi.' };
   }
 
-  // 4. Arahkan ke halaman login jika berhasil
+  // 4. Arahkan ke halaman login jika registrasi berhasil
   redirect('/login');
 }

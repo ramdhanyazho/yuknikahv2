@@ -2,10 +2,22 @@
 import NextAuth from 'next-auth';
 import Google from 'next-auth/providers/google';
 import Credentials from 'next-auth/providers/credentials';
-import { authConfig } from './auth.config'; // <-- Path diubah
-import { getUserByEmail } from '@/lib/data';
+import { authConfig } from './auth.config';
+import { db } from './turso';
+import { users } from './schema';
+import { eq } from 'drizzle-orm';
 import bcrypt from 'bcrypt';
 import { z } from 'zod';
+
+async function getUserByEmail(email) {
+  try {
+    const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
+    return result[0] || null;
+  } catch (error) {
+    console.error('Failed to fetch user:', error);
+    return null;
+  }
+}
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
@@ -23,7 +35,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         if (parsedCredentials.success) {
           const { email, password } = parsedCredentials.data;
           const user = await getUserByEmail(email);
-          if (!user) return null;
+          if (!user || !user.password) return null;
           const passwordsMatch = await bcrypt.compare(password, user.password);
           if (passwordsMatch) return user;
         }
@@ -31,4 +43,25 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       },
     }),
   ],
+  callbacks: {
+    async signIn({ user, account }) {
+      // Izinkan OAuth tanpa verifikasi email
+      if (account.provider !== 'credentials') {
+        
+        // Cek apakah pengguna sudah ada di database
+        const existingUser = await getUserByEmail(user.email);
+        
+        // Jika belum ada, buat pengguna baru
+        if (!existingUser) {
+          await db.insert(users).values({
+            name: user.name,
+            email: user.email,
+            // Password bisa null karena ini login via Google
+          });
+        }
+      }
+      return true;
+    },
+    // ... callback lain jika diperlukan
+  },
 });
