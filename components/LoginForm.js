@@ -4,6 +4,7 @@
 import { useFormState, useFormStatus } from 'react-dom';
 import { authenticate } from '@/app/actions';
 import { Button, Form, Card, Alert } from 'react-bootstrap';
+import { signIn } from 'next-auth/react'; // <-- 1. Impor signIn
 
 function LoginButton() {
   const { pending } = useFormStatus();
@@ -50,8 +51,11 @@ export default function LoginForm({ onRegisterClick }) {
         <div className="text-center text-muted my-3">or</div>
 
         <div className="d-grid">
-          {/* Tambahkan onClick untuk signIn via Google nanti */}
-          <Button variant="outline-secondary">
+          {/* 2. Tambahkan onClick di sini */}
+          <Button 
+            variant="outline-secondary"
+            onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
+          >
             Sign in with Google
           </Button>
         </div>
