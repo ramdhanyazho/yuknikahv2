@@ -1,77 +1,36 @@
 // components/RegisterForm.js
 'use client';
 
-import { useEffect } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useFormState } from 'react-dom';
 import { registerUser } from '@/app/actions-register';
-import { Form, Button, Alert } from 'react-bootstrap';
-import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-
-function RegisterButton() {
-  const { pending } = useFormStatus();
-  return (
-    <Button variant="primary" type="submit" size="lg" disabled={pending}>
-      {pending ? 'Mendaftarkan...' : 'Register'}
-    </Button>
-  );
-}
 
 export default function RegisterForm() {
   const initialState = { message: null, success: false };
   const [state, dispatch] = useFormState(registerUser, initialState);
-  const router = useRouter();
-
-  useEffect(() => {
-    if (state.success) {
-      const timer = setTimeout(() => {
-        router.push('/login');
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [state.success, router]);
 
   return (
-    <Form action={dispatch}>
-      <h3 className="fw-bold mb-4 text-center">Silakan registrasi untuk melanjutkan</h3>
-      
-      {/* Notifikasi akan muncul di sini */}
+    <div style={{ maxWidth: 400, margin: "50px auto", padding: 20, border: "1px solid #ddd", borderRadius: 8 }}>
+      <h3>DEBUG Register Form</h3>
+
+      {/* Notifikasi dari server action */}
       {state.message && (
-        <Alert variant={state.success ? 'success' : 'danger'}>
+        <div style={{ 
+          background: state.success ? "#d4edda" : "#f8d7da", 
+          padding: 10, 
+          borderRadius: 4, 
+          marginBottom: 10 
+        }}>
           {state.message}
-        </Alert>
+        </div>
       )}
-      
-      <Form.Group className="mb-3">
-        <Form.Control type="text" name="name" placeholder="Name" size="lg" required />
-      </Form.Group>
-      
-      <Form.Group className="mb-3">
-        <Form.Control type="email" name="email" placeholder="Email Address" size="lg" required />
-      </Form.Group>
 
-      <Form.Group className="mb-3">
-        <Form.Control type="password" name="password" placeholder="Password" size="lg" required />
-      </Form.Group>
-      
-      <div className="d-flex justify-content-end mb-3">
-        <small>Sudah punya akun? <a href="/login">Login</a></small>
-      </div>
+      <form action={dispatch}>
+        <input type="text" name="name" placeholder="Name" required style={{ display: "block", marginBottom: 10, width: "100%" }} />
+        <input type="email" name="email" placeholder="Email" required style={{ display: "block", marginBottom: 10, width: "100%" }} />
+        <input type="password" name="password" placeholder="Password" required style={{ display: "block", marginBottom: 10, width: "100%" }} />
 
-      <div className="d-grid">
-        <RegisterButton />
-      </div>
-
-      <div className="text-center text-muted my-3">or</div>
-
-       <div className="d-grid">
-         <Button 
-            variant="outline-secondary"
-            onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
-          >
-            Sign in with Google
-         </Button>
-      </div>
-    </Form>
+        <button type="submit" style={{ padding: "10px 20px" }}>Register</button>
+      </form>
+    </div>
   );
 }
