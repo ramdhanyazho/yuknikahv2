@@ -22,15 +22,12 @@ export default function RegisterForm() {
   const [state, dispatch] = useFormState(registerUser, initialState);
   const router = useRouter();
 
-  // Efek untuk redirect setelah registrasi berhasil
   useEffect(() => {
     if (state.success) {
-      // Tunggu 2 detik agar pengguna bisa baca pesan sukses
       const timer = setTimeout(() => {
         router.push('/login');
       }, 2000);
-
-      return () => clearTimeout(timer); // Cleanup timer
+      return () => clearTimeout(timer);
     }
   }, [state.success, router]);
 
@@ -38,22 +35,22 @@ export default function RegisterForm() {
     <Form action={dispatch}>
       <h3 className="fw-bold mb-4 text-center">Silakan registrasi untuk melanjutkan</h3>
       
-      {/* Notifikasi Popup (Alert) */}
+      {/* Notifikasi akan muncul di sini */}
       {state.message && (
         <Alert variant={state.success ? 'success' : 'danger'}>
           {state.message}
         </Alert>
       )}
       
-      <Form.Group className="mb-3" controlId="registerName">
+      <Form.Group className="mb-3">
         <Form.Control type="text" name="name" placeholder="Name" size="lg" required />
       </Form.Group>
       
-      <Form.Group className="mb-3" controlId="registerEmail">
+      <Form.Group className="mb-3">
         <Form.Control type="email" name="email" placeholder="Email Address" size="lg" required />
       </Form.Group>
 
-      <Form.Group className="mb-3" controlId="registerPassword">
+      <Form.Group className="mb-3">
         <Form.Control type="password" name="password" placeholder="Password" size="lg" required />
       </Form.Group>
       

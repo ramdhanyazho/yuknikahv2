@@ -11,10 +11,11 @@ import { z } from 'zod';
 
 async function getUserByEmail(email) {
   try {
+    if (!email) return null;
     const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
     return result[0] || null;
   } catch (error) {
-    console.error('Failed to fetch user:', error);
+    console.error('Database error fetching user:', error);
     return null;
   }
 }
@@ -28,10 +29,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
     }),
     Credentials({
       async authorize(credentials) {
-        const parsedCredentials = z
-          .object({ email: z.string().email(), password: z.string().min(6) })
-          .safeParse(credentials);
-
+        const parsedCredentials = z.object({ email: z.string().email(), password: z.string().min(6) }).safeParse(credentials);
         if (parsedCredentials.success) {
           const { email, password } = parsedCredentials.data;
           const user = await getUserByEmail(email);
@@ -45,23 +43,24 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
   ],
   callbacks: {
     async signIn({ user, account }) {
-      // Izinkan OAuth tanpa verifikasi email
+      // Izinkan OAuth (Google, dll.) tanpa verifikasi email
       if (account.provider !== 'credentials') {
-        
-        // Cek apakah pengguna sudah ada di database
-        const existingUser = await getUserByEmail(user.email);
-        
-        // Jika belum ada, buat pengguna baru
-        if (!existingUser) {
-          await db.insert(users).values({
-            name: user.name,
-            email: user.email,
-            // Password bisa null karena ini login via Google
-          });
+        try {
+          const existingUser = await getUserByEmail(user.email);
+          if (!existingUser) {
+            await db.insert(users).values({
+              name: user.name,
+              email: user.email,
+              // Password sengaja dibiarkan kosong (null)
+            });
+          }
+          return true; // Izinkan login
+        } catch (error) {
+          console.error("Error saving Google user:", error);
+          return false; // Tolak login jika ada error database
         }
       }
-      return true;
+      return true; // Izinkan login via credentials
     },
-    // ... callback lain jika diperlukan
   },
 });
