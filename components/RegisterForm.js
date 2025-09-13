@@ -1,77 +1,54 @@
-// components/RegisterForm.js
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
-import { registerUser } from '@/app/actions-register';
-import { Form, Button, Alert } from 'react-bootstrap';
-import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-
-function RegisterButton() {
-  const { pending } = useFormStatus();
-  return (
-    <Button variant="primary" type="submit" size="lg" disabled={pending}>
-      {pending ? 'Mendaftarkan...' : 'Register'}
-    </Button>
-  );
-}
+import { useState } from "react";
+import { registerUser } from "@/app/actions/registerUser";
 
 export default function RegisterForm() {
-  const initialState = { message: null, success: false };
-  const [state, dispatch] = useFormState(registerUser, initialState);
-  const router = useRouter();
+  const [message, setMessage] = useState(null);
 
-  useEffect(() => {
-    if (state.success) {
-      const timer = setTimeout(() => {
-        router.push('/login');
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [state.success, router]);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    console.log("📤 Sending form data:", Object.fromEntries(formData));
+
+    const res = await registerUser(formData);
+    console.log("📥 Response from action:", res);
+
+    setMessage(res.message);
+  };
 
   return (
-    <Form action={dispatch}>
-      <h3 className="fw-bold mb-4 text-center">Silakan registrasi untuk melanjutkan</h3>
-      
-      {/* Notifikasi akan muncul di sini */}
-      {state.message && (
-        <Alert variant={state.success ? 'success' : 'danger'}>
-          {state.message}
-        </Alert>
-      )}
-      
-      <Form.Group className="mb-3">
-        <Form.Control type="text" name="name" placeholder="Name" size="lg" required />
-      </Form.Group>
-      
-      <Form.Group className="mb-3">
-        <Form.Control type="email" name="email" placeholder="Email Address" size="lg" required />
-      </Form.Group>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <input
+        type="text"
+        name="name"
+        placeholder="Name"
+        className="border p-2 w-full"
+        required
+      />
+      <input
+        type="email"
+        name="email"
+        placeholder="Email"
+        className="border p-2 w-full"
+        required
+      />
+      <input
+        type="password"
+        name="password"
+        placeholder="Password"
+        className="border p-2 w-full"
+        required
+      />
+      <button
+        type="submit"
+        className="bg-blue-500 text-white px-4 py-2 rounded"
+      >
+        Register
+      </button>
 
-      <Form.Group className="mb-3">
-        <Form.Control type="password" name="password" placeholder="Password" size="lg" required />
-      </Form.Group>
-      
-      <div className="d-flex justify-content-end mb-3">
-        <small>Sudah punya akun? <a href="/login">Login</a></small>
-      </div>
-
-      <div className="d-grid">
-        <RegisterButton />
-      </div>
-
-      <div className="text-center text-muted my-3">or</div>
-
-       <div className="d-grid">
-         <Button 
-            variant="outline-secondary"
-            onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
-          >
-            Sign in with Google
-         </Button>
-      </div>
-    </Form>
+      {message && <p className="mt-2 text-sm">{message}</p>}
+    </form>
   );
 }
