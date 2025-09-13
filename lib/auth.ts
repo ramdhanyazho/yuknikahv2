@@ -48,6 +48,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         try {
           const existingUser = await getUserByEmail(user.email);
           if (!existingUser) {
+            // Jika pengguna belum ada, buat baru di database
             await db.insert(users).values({
               name: user.name,
               email: user.email,
