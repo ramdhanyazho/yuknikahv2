@@ -30,38 +30,47 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
     Credentials({
       async authorize(credentials) {
         const parsedCredentials = z.object({ email: z.string().email(), password: z.string().min(6) }).safeParse(credentials);
+
         if (parsedCredentials.success) {
           const { email, password } = parsedCredentials.data;
           const user = await getUserByEmail(email);
-          if (!user || !user.password) return null;
+
+          // 1. Pastikan pengguna ada DAN memiliki password (bukan akun Google)
+          if (!user || !user.password) {
+            console.log('Login manual gagal: Pengguna tidak ditemukan atau tidak memiliki password.');
+            return null;
+          }
+
+          // 2. Bandingkan password yang diinput dengan yang ada di database
           const passwordsMatch = await bcrypt.compare(password, user.password);
-          if (passwordsMatch) return user;
+          if (passwordsMatch) {
+            console.log('Login manual berhasil untuk:', user.email);
+            return user; // Jika cocok, login berhasil
+          }
         }
-        return null;
+        
+        console.log('Login manual gagal: Kredensial tidak valid.');
+        return null; // Jika password salah atau input tidak valid
       },
     }),
   ],
   callbacks: {
     async signIn({ user, account }) {
-      // Izinkan OAuth (Google, dll.) tanpa verifikasi email
-      if (account.provider !== 'credentials') {
+      if (account.provider === 'google') {
         try {
           const existingUser = await getUserByEmail(user.email);
           if (!existingUser) {
-            // Jika pengguna belum ada, buat baru di database
             await db.insert(users).values({
               name: user.name,
               email: user.email,
-              // Password sengaja dibiarkan kosong (null)
             });
           }
-          return true; // Izinkan login
         } catch (error) {
           console.error("Error saving Google user:", error);
-          return false; // Tolak login jika ada error database
+          return false;
         }
       }
-      return true; // Izinkan login via credentials
+      return true;
     },
   },
 });
