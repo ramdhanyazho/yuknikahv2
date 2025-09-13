@@ -1,13 +1,15 @@
-'use client'; // <-- TAMBAHKAN BARIS INI
+// app/dashboard/layout.js
+'use client';
 
 import { useState } from 'react';
 import { Container, Row, Col, Nav, Navbar, Button, Offcanvas } from 'react-bootstrap';
 import Image from 'next/image';
 import Link from 'next/link';
 
+// Komponen Sidebar Navigasi
 function SidebarNav() {
     return (
-        <Nav className="flex-column" style={{ minHeight: '100vh', backgroundColor: '#f8f9fa', padding: '1.5rem' }}>
+        <Nav className="flex-column" style={{ minHeight: '100vh', backgroundColor: '#FFF', padding: '1.5rem', borderRight: '1px solid #dee2e6' }}>
             <Navbar.Brand href="/" className="mb-4">
                 <Image src="/logo-yuknikah.png" alt="Logo" width={150} height={40} />
             </Navbar.Brand>
@@ -33,11 +35,13 @@ export default function DashboardLayout({ children }) {
         <Col lg={2} className="d-none d-lg-block p-0">
           <SidebarNav />
         </Col>
-        <Col lg={10} md={12} style={{ padding: '1.5rem' }}>
-          <Navbar bg="light" className="d-lg-none mb-3">
+        <Col lg={10} md={12} style={{ padding: '1.5rem', backgroundColor: '#f8f9fa' }}>
+          <Navbar bg="light" className="d-lg-none mb-3 rounded">
             <Container fluid>
               <Button variant="outline-secondary" onClick={handleShow}>☰</Button>
-              <Navbar.Text className="fw-bold">Nama Pengguna</Navbar.Text>
+              <Navbar.Text className="fw-bold">
+                Nama Pengguna
+              </Navbar.Text>
             </Container>
           </Navbar>
           <Offcanvas show={show} onHide={handleClose} placement="start">

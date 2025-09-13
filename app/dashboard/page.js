@@ -1,32 +1,39 @@
-'use client'; // <-- TAMBAHKAN BARIS INI
+// app/dashboard/page.js
+'use client'; 
 
-import Header from '@/components/Header';
-import LoginForm from '@/components/LoginForm';
-import { Container, Row, Col } from 'react-bootstrap';
-import Image from 'next/image';
+import { Card, Button } from 'react-bootstrap';
 
-export default function LoginPage() {
+export default function DashboardPage() {
   return (
     <div>
-      <Header />
-      <main style={{ paddingTop: '120px', paddingBottom: '60px', backgroundColor: '#f8f9fa' }}>
-        <Container>
-          <Row className="align-items-center justify-content-center">
-            <Col lg={6} className="d-none d-lg-block">
-              <Image 
-                src="https://placehold.co/600x400/EFEFEF/333333?text=Gambar+Login"
-                alt="Login illustration"
-                width={600}
-                height={400}
-                className="img-fluid rounded-4"
-              />
-            </Col>
-            <Col lg={6} md={8}>
-              <LoginForm />
-            </Col>
-          </Row>
-        </Container>
-      </main>
+        <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+                <h2 className="fw-bold mb-1">Data Acara</h2>
+                <p className="text-muted">Seluruh data Acara tersedia disini</p>
+            </div>
+            <div>
+                <Button variant="light" className="me-2">Data Acara</Button>
+                <Button variant="success">Tambah Acara</Button>
+            </div>
+        </div>
+
+        <Card className="text-center p-5 border-0" style={{ backgroundColor: '#e9ecef' }}>
+            <Card.Body>
+                <Card.Text>
+                    {/* Anda bisa mengganti ini dengan gambar ilustrasi nanti */}
+                    <span style={{ fontSize: '4rem', opacity: 0.3 }}>📄</span> 
+                </Card.Text>
+                <Card.Title as="h3" className="fw-bold my-3">
+                  Belum Ada Acara
+                </Card.Title>
+                <Card.Text className="text-muted">
+                    Klik Tambah Acara, Pilih Jenis Acara, Isi Seluruh Data, Klik Simpan, Klik Preview.
+                </Card.Text>
+                <Button variant="success" className="mt-3 px-4 fw-semibold">
+                  Tambah Acara
+                </Button>
+            </Card.Body>
+        </Card>
     </div>
   );
 }
