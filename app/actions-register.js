@@ -1,3 +1,4 @@
+// app/actions-register.js
 'use server';
 
 import { db } from '@/lib/turso';
@@ -6,7 +7,6 @@ import bcrypt from 'bcrypt';
 import { z } from 'zod';
 import { redirect } from 'next/navigation';
 
-// Skema validasi untuk form registrasi
 const RegisterSchema = z.object({
   name: z.string().min(3, { message: "Nama minimal 3 karakter." }),
   email: z.string().email({ message: "Format email tidak valid." }),
@@ -14,40 +14,42 @@ const RegisterSchema = z.object({
 });
 
 export async function registerUser(prevState, formData) {
-  // 1. Validasi input dari form
   const validatedFields = RegisterSchema.safeParse(
     Object.fromEntries(formData.entries())
   );
 
   if (!validatedFields.success) {
     return {
-      errors: validatedFields.error.flatten().fieldErrors,
-      message: 'Gagal mendaftar. Mohon periksa kembali input Anda.',
+      success: false,
+      message: 'Input tidak valid. Mohon periksa kembali data Anda.',
     };
   }
 
   const { name, email, password } = validatedFields.data;
+  const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
-    // 2. Enkripsi (hash) password sebelum disimpan
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Debugging: Cetak data ke log server untuk memastikan data sampai di sini
+    console.log('Mencoba menyimpan pengguna baru:', { name, email });
 
-    // 3. Simpan pengguna baru ke database Turso
     await db.insert(users).values({
       name: name,
       email: email,
       password: hashedPassword,
-      role: 'CLIENT', // Role default untuk pengguna baru
+      role: 'CLIENT',
     });
 
-  } catch (e) {
-    // Tangani jika email sudah terdaftar (error constraint unique)
-    if (e.message.includes('UNIQUE constraint failed: users.email')) {
-      return { message: 'Email ini sudah terdaftar.' };
-    }
-    return { message: 'Terjadi kesalahan pada database, silakan coba lagi.' };
-  }
+    console.log('Pengguna berhasil disimpan ke database.');
 
-  // 4. Arahkan ke halaman login jika registrasi berhasil
-  redirect('/login');
+    // Mengembalikan pesan sukses
+    return { success: true, message: 'Registrasi berhasil! Anda akan diarahkan ke halaman login.' };
+
+  } catch (e) {
+    console.error('Error saat registrasi:', e.message); // Debugging error
+    
+    if (e.message.includes('UNIQUE constraint failed: users.email')) {
+      return { success: false, message: 'Email ini sudah terdaftar.' };
+    }
+    return { success: false, message: 'Terjadi kesalahan pada server. Coba lagi nanti.' };
+  }
 }
