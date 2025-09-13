@@ -1,9 +1,11 @@
 // app/actions.js
 'use server';
 
-import { signIn } from '@/lib/auth'; // <-- Path diubah
+// 1. Tambahkan 'signOut' ke dalam import
+import { signIn, signOut } from '@/lib/auth'; 
 import { AuthError } from 'next-auth';
 
+// Fungsi authenticate yang sudah ada (jangan diubah)
 export async function authenticate(prevState, formData) {
   try {
     await signIn('credentials', formData);
@@ -18,4 +20,9 @@ export async function authenticate(prevState, formData) {
     }
     throw error;
   }
+}
+
+// 2. Tambahkan fungsi baru ini untuk logout
+export async function handleSignOut() {
+  await signOut();
 }

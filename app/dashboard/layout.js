@@ -1,10 +1,11 @@
 // app/dashboard/layout.js
-'use client';
+'use client'; 
 
 import { useState } from 'react';
 import { Container, Row, Col, Nav, Navbar, Button, Offcanvas } from 'react-bootstrap';
 import Image from 'next/image';
 import Link from 'next/link';
+import SignOutButton from '@/components/SignOutButton'; // <-- 1. Impor tombol logout
 
 // Komponen Sidebar Navigasi
 function SidebarNav() {
@@ -20,6 +21,12 @@ function SidebarNav() {
             <p className="text-muted small text-uppercase mt-4">Peluang</p>
             <Nav.Link as={Link} href="/dashboard/affiliator" className="fw-medium text-dark">Gabung Affiliator</Nav.Link>
             <Nav.Link as={Link} href="/dashboard/reseller" className="fw-medium text-dark">Gabung Reseller</Nav.Link>
+            
+            {/* 2. Tambahkan tombol logout di sini */}
+            <div className="mt-auto">
+                <hr />
+                <SignOutButton />
+            </div>
         </Nav>
     );
 }
