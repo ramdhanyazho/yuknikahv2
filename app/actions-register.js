@@ -5,7 +5,6 @@ import { db } from '@/lib/turso';
 import { users } from '@/lib/schema';
 import bcrypt from 'bcrypt';
 import { z } from 'zod';
-import { redirect } from 'next/navigation';
 
 const RegisterSchema = z.object({
   name: z.string().min(3, { message: "Nama minimal 3 karakter." }),
@@ -19,6 +18,7 @@ export async function registerUser(prevState, formData) {
   );
 
   if (!validatedFields.success) {
+    console.log('Validasi gagal:', validatedFields.error.format());
     return {
       success: false,
       message: 'Input tidak valid. Mohon periksa kembali data Anda.',
@@ -29,27 +29,23 @@ export async function registerUser(prevState, formData) {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
-    // Debugging: Cetak data ke log server untuk memastikan data sampai di sini
-    console.log('Mencoba menyimpan pengguna baru:', { name, email });
+    console.log('Mencoba simpan user:', { name, email });
 
     await db.insert(users).values({
-      name: name,
-      email: email,
+      name,
+      email,
       password: hashedPassword,
       role: 'CLIENT',
     });
 
-    console.log('Pengguna berhasil disimpan ke database.');
-
-    // Mengembalikan pesan sukses
+    console.log('User berhasil dibuat!');
     return { success: true, message: 'Registrasi berhasil! Anda akan diarahkan ke halaman login.' };
 
   } catch (e) {
-    console.error('Error saat registrasi:', e.message); // Debugging error
-    
-    if (e.message.includes('UNIQUE constraint failed: users.email')) {
+    console.error('Error saat registrasi:', e);
+    if (e.message.includes('UNIQUE constraint failed')) {
       return { success: false, message: 'Email ini sudah terdaftar.' };
     }
-    return { success: false, message: 'Terjadi kesalahan pada server. Coba lagi nanti.' };
+    return { success: false, message: 'Server error: ' + e.message };
   }
 }
