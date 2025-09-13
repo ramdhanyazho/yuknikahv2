@@ -1,3 +1,6 @@
+// app/dashboard/page.js
+'use client'; // <-- TAMBAHKAN BARIS INI
+
 import { Card, Button } from 'react-bootstrap';
 
 export default function DashboardPage() {
