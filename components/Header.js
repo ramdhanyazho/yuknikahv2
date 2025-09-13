@@ -1,38 +1,37 @@
 // components/Header.js
-import Link from 'next/link';
+'use client';
+
 import Image from 'next/image';
+import { Navbar, Nav, NavDropdown, Container, Button } from 'react-bootstrap';
 
 export default function Header() {
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50">
-      <nav className="container mx-auto px-6 py-2 flex justify-between items-center">
-        {/* Logo Baru */}
-        <Link href="/">
-          <Image 
-            src="/logo-yuknikah.png" // Memastikan path ini benar
+    <Navbar bg="white" expand="lg" className="shadow-sm fixed-top">
+      <Container>
+        <Navbar.Brand href="/">
+           <Image 
+            src="/logo-yuknikah.png"
             alt="yuknikah.id Logo"
-            width={180}
-            height={50}
-            priority // Membuat logo dimuat lebih cepat
+            width={150}
+            height={40}
+            priority
           />
-        </Link>
-
-        {/* Menu Navigasi (Desktop) */}
-        <div className="hidden md:flex items-center space-x-8 text-lg">
-          <Link href="/" className="text-gray-600 hover:text-pink-400">Home</Link>
-          <Link href="/harga" className="text-gray-600 hover:text-pink-400">Harga</Link>
-          <Link href="/template" className="text-gray-600 hover:text-pink-400">Template</Link>
-          <Link href="/artikel" className="text-gray-600 hover:text-pink-400">Artikel</Link>
-          <Link href="/login" className="text-gray-600 hover:text-pink-400">Login</Link>
+        </Navbar.Brand>
+        <div className="d-flex d-lg-none">
+            <Button variant="dark" href="/registrasi">Uji Coba Gratis</Button>
+            <Navbar.Toggle aria-controls="main-navbar" className="ms-2" />
         </div>
-
-        {/* Tombol Aksi (Desktop) */}
-        <div className="hidden md:flex">
-          <Link href="/registrasi" className="bg-pink-400 text-white px-6 py-2 rounded-full hover:bg-pink-500 transition-colors">
-            Uji Coba Gratis
-          </Link>
-        </div>
-      </nav>
-    </header>
+        <Navbar.Collapse id="main-navbar">
+          <Nav className="mx-auto">
+            <Nav.Link href="/">Home</Nav.Link>
+            <Nav.Link href="/harga">Harga</Nav.Link>
+            <Nav.Link href="/template">Template</Nav.Link>
+            <Nav.Link href="/artikel">Artikel</Nav.Link>
+            <Nav.Link href="/login">Login</Nav.Link>
+          </Nav>
+          <Button variant="dark" href="/registrasi" className="d-none d-lg-block">Uji Coba Gratis</Button>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 }
