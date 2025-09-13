@@ -1,45 +1,95 @@
-// components/RegisterForm.js
 'use client';
+
 import { Form, Button } from 'react-bootstrap';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function RegisterForm() {
+  const [formData, setFormData] = useState({
+    nama: '',
+    email: '',
+    password: '',
+    konfirmasiPassword: '',
+  });
+
+  const router = useRouter();
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (formData.password !== formData.konfirmasiPassword) {
+      alert('Password tidak cocok!');
+      return;
+    }
+
+    console.log('Registrasi data:', formData);
+
+    // Redirect ke dashboard setelah registrasi sukses
+    router.push('/dashboard');
+  };
+
   return (
-    <Form>
-      <h3 className="fw-bold mb-4 text-center">Silakan registrasi untuk melanjutkan</h3>
-      
-      <Form.Group className="mb-3" controlId="registerName">
-        <Form.Control type="text" placeholder="Name" size="lg" />
+    <Form onSubmit={handleSubmit}>
+      <h2 className="fw-bold mb-4 text-center">Registrasi</h2>
+
+      <Form.Group controlId="nama" className="mb-3">
+        <Form.Label>Nama Lengkap</Form.Label>
+        <Form.Control
+          type="text"
+          name="nama"
+          placeholder="Masukkan nama lengkap"
+          value={formData.nama}
+          onChange={handleChange}
+          required
+        />
       </Form.Group>
-      
-      <Form.Group className="mb-3" controlId="registerEmail">
-        <Form.Control type="email" placeholder="Email Address" size="lg" />
+
+      <Form.Group controlId="email" className="mb-3">
+        <Form.Label>Email</Form.Label>
+        <Form.Control
+          type="email"
+          name="email"
+          placeholder="Masukkan email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+        />
       </Form.Group>
 
-      <Form.Group className="mb-3" controlId="registerPassword">
-        <Form.Control type="password" placeholder="Password" size="lg" />
+      <Form.Group controlId="password" className="mb-3">
+        <Form.Label>Password</Form.Label>
+        <Form.Control
+          type="password"
+          name="password"
+          placeholder="Masukkan password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+        />
       </Form.Group>
 
-      <Form.Group className="mb-3" controlId="registerConfirmPassword">
-        <Form.Control type="password" placeholder="Confirm Password" size="lg" />
+      <Form.Group controlId="konfirmasiPassword" className="mb-3">
+        <Form.Label>Konfirmasi Password</Form.Label>
+        <Form.Control
+          type="password"
+          name="konfirmasiPassword"
+          placeholder="Ulangi password"
+          value={formData.konfirmasiPassword}
+          onChange={handleChange}
+          required
+        />
       </Form.Group>
-      
-      <div className="d-flex justify-content-end mb-3">
-        <small>Sudah punya akun? <a href="/login">Login</a></small>
-      </div>
 
-      <div className="d-grid">
-        <Button variant="primary" type="submit" size="lg">
-          Register
-        </Button>
-      </div>
-
-      <div className="text-center text-muted my-3">or</div>
-
-       <div className="d-grid">
-         <Button variant="outline-secondary">
-            Sign in with Google
-         </Button>
-      </div>
+      <Button variant="dark" type="submit" className="w-100 mt-3 fw-semibold">
+        Registrasi
+      </Button>
     </Form>
   );
 }
