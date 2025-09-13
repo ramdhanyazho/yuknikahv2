@@ -1,60 +1,104 @@
 // components/LoginForm.js
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
-import { authenticate } from '@/app/actions';
+import { useState } from 'react';
 import { Button, Form, Card, Alert } from 'react-bootstrap';
-import { signIn } from 'next-auth/react'; // <-- 1. Impor signIn
-
-function LoginButton() {
-  const { pending } = useFormStatus();
-  return (
-    <Button variant="primary" type="submit" size="lg" disabled={pending}>
-      {pending ? 'Loading...' : 'Login'}
-    </Button>
-  );
-}
+import { signIn } from 'next-auth/react';
 
 export default function LoginForm({ onRegisterClick }) {
-  const [errorMessage, dispatch] = useFormState(authenticate, undefined);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrorMessage(null);
+    setLoading(true);
+
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+
+    // panggil NextAuth credentials provider
+    const res = await signIn('credentials', {
+      redirect: false,
+      email,
+      password,
+      callbackUrl: '/dashboard',
+    });
+
+    setLoading(false);
+
+    if (res?.error) {
+      setErrorMessage('Email atau password salah');
+    } else {
+      // redirect manual kalau sukses
+      window.location.href = '/dashboard';
+    }
+  };
 
   return (
     <Card className="shadow-lg border-0 rounded-4">
       <Card.Body className="p-5">
-        <h3 className="fw-bold mb-4 text-center">Silakan masuk untuk melanjutkan</h3>
-        
-        <Form action={dispatch}>
+        <h3 className="fw-bold mb-4 text-center">
+          Silakan masuk untuk melanjutkan
+        </h3>
+
+        {/* Form login manual */}
+        <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="email">
-            <Form.Control type="email" name="email" placeholder="Email Address" size="lg" required />
+            <Form.Control
+              type="email"
+              name="email"
+              placeholder="Email Address"
+              size="lg"
+              required
+            />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="password">
-            <Form.Control type="password" name="password" placeholder="Password" size="lg" required />
+            <Form.Control
+              type="password"
+              name="password"
+              placeholder="Password"
+              size="lg"
+              required
+            />
           </Form.Group>
-          
+
           <div className="d-grid mt-4">
-            <LoginButton />
+            <Button variant="primary" type="submit" size="lg" disabled={loading}>
+              {loading ? 'Loading...' : 'Login'}
+            </Button>
           </div>
 
           <div className="d-flex justify-content-between mt-3">
-            <Button variant="link" className="p-0" onClick={onRegisterClick}>
+            <Button
+              variant="link"
+              className="p-0"
+              onClick={onRegisterClick}
+            >
               Registrasi Manual
             </Button>
-            <a href="/lupa-password" className="small">Lupa Password?</a>
+            <a href="/lupa-password" className="small">
+              Lupa Password?
+            </a>
           </div>
-          
+
           {errorMessage && (
-            <Alert variant="danger" className="mt-3">{errorMessage}</Alert>
+            <Alert variant="danger" className="mt-3">
+              {errorMessage}
+            </Alert>
           )}
         </Form>
 
         <div className="text-center text-muted my-3">or</div>
 
+        {/* Login pakai Google */}
         <div className="d-grid">
-          {/* 2. Tambahkan onClick di sini */}
-          <Button 
+          <Button
             variant="outline-secondary"
-            onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
+            onClick={() =>
+              signIn('google', { callbackUrl: '/dashboard' })
+            }
           >
             Sign in with Google
           </Button>
