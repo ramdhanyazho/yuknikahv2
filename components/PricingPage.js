@@ -5,85 +5,68 @@ import { useState } from 'react';
 import { Container, Row, Col, Card, Button, Form } from 'react-bootstrap';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 
-// DATA BARU SESUAI PERMINTAAN ANDA
+// Data untuk paket harga "Satuan"
 const satuanPackages = [
   { 
     name: 'Free', 
     price: '0', 
     description: 'Uji coba gratis tanpa batasan waktu', 
-    features: { 
-      "Akses Seluruh Tema": true, 
-      "Ubah Nama Tamu": true, 
-      "Tanpa Masa Aktif": true, 
-      "RSVP & Ucapan": true, 
-      "Lokasi Maps": true, 
-      "Unlimited Penerima": true, 
-      "Countdown & Save To Calendar": true,
-      "Foto Gallery": false,
-      "Rekening Titip Hadiah": false,
-      "Musik": false,
-      "Bisa Disebar": false,
-    },
+    features: { "Akses Seluruh Tema": true, "Ubah Nama Tamu": true, "Tanpa Masa Aktif": true, "RSVP & Ucapan": true, "Lokasi Maps": true, "Unlimited Penerima": true, "Countdown & Save To Calendar": true, "Foto Gallery": false, "Rekening Titip Hadiah": false, "Musik": false, "Bisa Disebar": false },
     primary: false 
   },
   { 
     name: 'Basic', 
     price: '39.000', 
     description: 'Tanpa musik, titip hadiah dan foto', 
-    features: { 
-      "Semua di Paket Free": true, 
-      "Bisa Disebar": true, 
-      "Titip Kado Fisik": true, 
-      "Virtual Gift": true,
-      "Musik": false,
-      "Rekening Titip Hadiah": false,
-      "Foto Gallery": false,
-    },
+    features: { "Semua di Paket Free": true, "Bisa Disebar": true, "Titip Kado Fisik": true, "Virtual Gift": true, "Musik": false, "Rekening Titip Hadiah": false, "Foto Gallery": false },
     primary: false 
-  },
-  { 
-    name: 'Klasik', 
-    price: '55.000', 
-    description: 'Tanpa galery dan titip hadiah', 
-    features: { 
-      "Semua di Paket Basic": true, 
-      "Musik": true, 
-      "Custom Musik": false, 
-      "Rekening Titip Hadiah": false, 
-      "Foto Gallery": false,
-    },
-    primary: false
   },
   { 
     name: 'Pro', 
     price: '69.000', 
     description: 'Bisa foto galery dan titip hadiah', 
-    features: { 
-      "Semua di Paket Klasik": true, 
-      "Foto Gallery": true, 
-      "Rekening Titip Hadiah": true,
-      "Love Story": false,
-      "Unlimited Revisi": false,
-    },
+    features: { "Semua di Paket Basic": true, "Musik": true, "Foto Gallery": true, "Rekening Titip Hadiah": true, "Love Story": false, "Unlimited Revisi": false },
     primary: true
   },
   { 
     name: 'Premium', 
     price: '119.000', 
     description: 'Semua fitur bisa dipakai tanpa batas', 
-    features: { 
-      "Semua di Paket Pro": true, 
-      "Love Story": true, 
-      "Unlimited Revisi": true, 
-      "Custom Warna Tema": true,
-    },
+    features: { "Semua di Paket Pro": true, "Love Story": true, "Unlimited Revisi": true, "Custom Musik": true, "Custom Warna Tema": true, "Ubah Susunan Tema": true },
     primary: false
   }
 ];
 
-// Anda bisa menambahkan data untuk paket langganan di sini jika perlu
+// DATA BARU UNTUK PAKET BERLANGGANAN
 const langgananPackages = [
-    // ... data paket langganan ...
+    { 
+        name: '1 Bulan', 
+        price: '150.000', 
+        description: 'Bebas buat banyak undangan', 
+        features: { "Fitur Premium": true, "Akses Semua Fitur": true, "Export Undangan Cetak": true, "Opsi Landing Page": true, "Bebas Buat Banyak Undangan": true, "Aktif Ke Paket Premium": true, "Undangan Aktif 1 Bulan": true, "Custom Domain": true },
+        primary: false
+    },
+    { 
+        name: '3 Bulan', 
+        price: '400.000', 
+        description: 'Hemat lebih banyak', 
+        features: { "Fitur Premium": true, "Akses Semua Fitur": true, "Export Undangan Cetak": true, "Opsi Landing Page": true, "Bebas Buat Banyak Undangan": true, "Aktif Ke Paket Premium": true, "Undangan Aktif 3 Bulan": true, "Custom Domain": true },
+        primary: true
+    },
+    { 
+        name: '6 Bulan', 
+        price: '750.000', 
+        description: 'Untuk bisnis Anda', 
+        features: { "Fitur Premium": true, "Akses Semua Fitur": true, "Export Undangan Cetak": true, "Opsi Landing Page": true, "Bebas Buat Banyak Undangan": true, "Aktif Ke Paket Premium": true, "Undangan Aktif 6 Bulan": true, "Custom Domain": true },
+        primary: false
+    },
+     { 
+        name: '1 Tahun', 
+        price: '1.450.000', 
+        description: 'Untuk bisnis Anda', 
+        features: { "Fitur Premium": true, "Akses Semua Fitur": true, "Export Undangan Cetak": true, "Opsi Landing Page": true, "Bebas Buat Banyak Undangan": true, "Aktif Ke Paket Premium": true, "Undangan Aktif 1 Tahun": true, "Custom Domain": true },
+        primary: false
+    },
 ];
 
 // Komponen Card untuk setiap paket
@@ -128,7 +111,9 @@ function PriceCard({ name, price, description, features, primary }) {
 
 export default function PricingPage() {
   const [isSubscription, setIsSubscription] = useState(false);
-  const packages = satuanPackages;
+  
+  // LOGIKA BARU: Pilih data paket berdasarkan state isSubscription
+  const packages = isSubscription ? langgananPackages : satuanPackages;
   
   return (
     <section className="py-5" style={{ marginTop: '70px', backgroundColor: '#f8f9fa' }}>
@@ -142,16 +127,16 @@ export default function PricingPage() {
         <div className="text-center text-dark my-5">
             <h2 className="fw-bold">Harga Terjangkau untuk Buat Undangan Online</h2>
              <div className="d-flex justify-content-center align-items-center mt-4">
-                <label style={{ fontSize: '1.2rem' }} className={!isSubscription ? 'fw-bold' : 'text-muted'}>Satuan</label>
+                <label style={{ fontSize: '1.2rem' }} className={!isSubscription ? 'fw-bold text-primary' : 'text-muted'}>Satuan</label>
                 <Form.Check
                     type="switch"
                     id="pricing-switch"
                     className="mx-3"
                     style={{ transform: 'scale(1.4)' }}
                     checked={isSubscription}
-                    onChange={() => setIsSubscription(!isSubscription)}
+                    onChange={() => setIsSubscription(!isSubscription)} // <-- INI FUNGSI PENGUBAHNYA
                 />
-                <label style={{ fontSize: '1.2rem' }} className={isSubscription ? 'fw-bold' : 'text-muted'}>Berlangganan</label>
+                <label style={{ fontSize: '1.2rem' }} className={isSubscription ? 'fw-bold text-primary' : 'text-muted'}>Berlangganan</label>
             </div>
         </div>
       </Container>
@@ -160,7 +145,7 @@ export default function PricingPage() {
          <div className="d-none d-lg-block">
              <Row>
                 {packages.map((pkg, index) => (
-                    <Col key={index} className="mb-4">
+                    <Col key={index} lg={3} md={6} className="mb-4">
                         <PriceCard {...pkg} />
                     </Col>
                 ))}
