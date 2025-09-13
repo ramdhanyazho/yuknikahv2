@@ -1,65 +1,45 @@
+// components/LoginForm.js
 'use client';
+import { Button, Form, Card } from 'react-bootstrap';
 
-import { Form, Button } from 'react-bootstrap';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-
-export default function LoginForm() {
-  const [formData, setFormData] = useState({ email: '', password: '' });
-  const router = useRouter();
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    // TODO: Validasi login (sementara log dummy)
-    if (formData.email && formData.password) {
-      console.log('Login data:', formData);
-
-      // Redirect ke dashboard
-      router.push('/dashboard');
-    } else {
-      alert('Email dan password wajib diisi!');
-    }
-  };
-
+// Menerima properti onRegisterClick
+export default function LoginForm({ onRegisterClick }) {
   return (
-    <Form onSubmit={handleSubmit}>
-      <h2 className="fw-bold mb-4 text-center">Login</h2>
+    <Card className="shadow-lg border-0 rounded-4">
+      <Card.Body className="p-5">
+        <h3 className="fw-bold mb-4 text-center">Silakan masuk untuk melanjutkan</h3>
+        <Form>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Control type="email" placeholder="Username or Email" size="lg" />
+          </Form.Group>
 
-      <Form.Group controlId="email" className="mb-3">
-        <Form.Label>Email</Form.Label>
-        <Form.Control
-          type="email"
-          name="email"
-          placeholder="Masukkan email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-      </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Control type="password" placeholder="Password" size="lg" />
+          </Form.Group>
+          
+          <div className="d-grid mt-4">
+            <Button variant="primary" type="submit" size="lg">
+              Login
+            </Button>
+          </div>
 
-      <Form.Group controlId="password" className="mb-3">
-        <Form.Label>Password</Form.Label>
-        <Form.Control
-          type="password"
-          name="password"
-          placeholder="Masukkan password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-      </Form.Group>
+          <div className="d-flex justify-content-between mt-3">
+            {/* Tombol ini sekarang akan memicu fungsi onRegisterClick */}
+            <Button variant="link" className="p-0" onClick={onRegisterClick}>
+              Registrasi Manual
+            </Button>
+            <a href="/lupa-password" className="small">Lupa Password?</a>
+          </div>
 
-      <Button variant="dark" type="submit" className="w-100 mt-3 fw-semibold">
-        Login
-      </Button>
-    </Form>
+          <div className="text-center text-muted my-3">or</div>
+
+           <div className="d-grid">
+             <Button variant="outline-secondary">
+                Sign in with Google
+             </Button>
+          </div>
+        </Form>
+      </Card.Body>
+    </Card>
   );
 }
