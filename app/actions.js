@@ -1,6 +1,7 @@
 // app/actions.js
 'use server';
 
+import { signIn } from '../auth';
 import { signIn } from '@/auth';
 import { AuthError } from 'next-auth';
 
