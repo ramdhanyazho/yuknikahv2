@@ -31,11 +31,20 @@ export default function Hero() {
           <Col lg={6} md={6} className="d-none d-md-block">
              <Splide options={{ type: 'loop', autoplay: true, interval: 3000, arrows: false }}>
                 <SplideSlide>
-                    {/* Ganti src dengan path gambar Anda di folder /public */}
+                    {/* Pastikan Anda memiliki gambar-gambar ini di folder /public/sampul/ */}
                     <Image src="/sampul/1.webp" alt="Contoh Undangan 1" width={500} height={500} className="img-fluid" />
                 </SplideSlide>
                 <SplideSlide>
                     <Image src="/sampul/2.webp" alt="Contoh Undangan 2" width={500} height={500} className="img-fluid" />
                 </SplideSlide>
                  <SplideSlide>
-                    <Image src="/sampul/3.
+                    {/* INI BAGIAN YANG DIPERBAIKI */}
+                    <Image src="/sampul/3.webp" alt="Contoh Undangan 3" width={500} height={500} className="img-fluid" />
+                </SplideSlide>
+             </Splide>
+          </Col>
+        </Row>
+      </Container>
+    </section>
+  );
+}
