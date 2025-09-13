@@ -1,5 +1,5 @@
 // app/dashboard/layout.js
-'use client';
+'use client'; // <-- TAMBAHKAN BARIS INI
 
 import { useState } from 'react';
 import { Container, Row, Col, Nav, Navbar, Button, Offcanvas } from 'react-bootstrap';
@@ -47,7 +47,7 @@ export default function DashboardLayout({ children }) {
                 ☰
               </Button>
               <Navbar.Text className="fw-bold">
-                Kakek Sugiono {/* Ganti dengan nama user dinamis nanti */}
+                Nama Pengguna {/* Ganti dengan nama user dinamis nanti */}
               </Navbar.Text>
             </Container>
           </Navbar>
