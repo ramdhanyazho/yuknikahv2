@@ -1,22 +1,43 @@
 "use client";
 
-import { useState } from "react";
-import { registerUser } from "@/app/actions/registerUser";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
   const [message, setMessage] = useState(null);
+  const [success, setSuccess] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formData = new FormData(e.target);
-    console.log("📤 Sending form data:", Object.fromEntries(formData));
+    const body = Object.fromEntries(formData);
 
-    const res = await registerUser(formData);
-    console.log("📥 Response from action:", res);
+    console.log("📤 Sending:", body);
 
-    setMessage(res.message);
+    const res = await fetch("/api/register", {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const data = await res.json();
+    console.log("📥 Response:", data);
+
+    setMessage(data.message);
+    setSuccess(data.success);
   };
+
+  // Auto redirect jika sukses
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        router.push("/login");
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [success, router]);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -48,7 +69,15 @@ export default function RegisterForm() {
         Register
       </button>
 
-      {message && <p className="mt-2 text-sm">{message}</p>}
+      {message && (
+        <p
+          className={`mt-2 text-sm ${
+            success ? "text-green-600" : "text-red-600"
+          }`}
+        >
+          {message}
+        </p>
+      )}
     </form>
   );
 }

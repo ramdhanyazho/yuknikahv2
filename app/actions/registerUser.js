@@ -1,44 +1,42 @@
-"use server";
+'use server';
 
-import { db } from "@/lib/turso";
-import { users } from "@/lib/schema";
-import { eq } from "drizzle-orm";
-import bcrypt from "bcryptjs";
+import { db } from '@/lib/turso';
+import { users } from '@/lib/schema';
+import bcrypt from 'bcryptjs';
 
-export async function registerUser(formData) {
+export async function registerUser(prevState, formData) {
+  console.log("=== registerUser terpanggil ===");
+
   try {
+    const name = formData.get("name");
     const email = formData.get("email");
     const password = formData.get("password");
-    const name = formData.get("name");
 
-    console.log("📌 Register request received:", { email, name });
+    console.log("Data diterima dari form:", { name, email, password });
 
-    // cek kalau email sudah ada
-    const existingUser = await db
-      .select()
-      .from(users)
-      .where(eq(users.email, email));
-
-    if (existingUser.length > 0) {
-      console.warn("⚠️ User already exists:", email);
-      return { success: false, message: "User already exists" };
+    if (!name || !email || !password) {
+      console.log("Form kosong / tidak lengkap");
+      return { success: false, message: "Semua field harus diisi" };
     }
 
-    // hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // insert user baru
-    await db.insert(users).values({
-      email,
+    console.log("Password berhasil di-hash:", hashedPassword.substring(0, 10) + "...");
+
+    // Coba insert ke DB
+    const result = await db.insert(users).values({
       name,
+      email,
       password: hashedPassword,
+      role: "CLIENT",
     });
 
-    console.log("✅ User created successfully:", email);
+    console.log("Insert result:", result);
 
-    return { success: true, message: "User created successfully" };
-  } catch (err) {
-    console.error("❌ Error in registerUser:", err);
-    return { success: false, message: "Registration failed" };
+    return { success: true, message: "User berhasil dibuat!" };
+
+  } catch (e) {
+    console.error("Error registerUser:", e);
+    return { success: false, message: "Terjadi error: " + e.message };
   }
 }
