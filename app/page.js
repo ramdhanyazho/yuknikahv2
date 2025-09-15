@@ -1,18 +1,22 @@
+// app/page.js
 'use client';
 
+import { useSession } from 'next-auth/react';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 
-export const dynamic = 'force-dynamic'; // WAJIB agar useSession tidak error saat prerender
+// Optional (disarankan untuk mencegah Vercel pre-render error)
+export const dynamic = 'force-dynamic';
 
 export default function HomePage() {
+  const { data: session } = useSession();
+
   return (
-    <div>
+    <>
       <Header />
       <main>
         <Hero />
-        {/* Tambahkan komponen lain di sini jika ada */}
       </main>
-    </div>
+    </>
   );
 }
