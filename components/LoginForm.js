@@ -1,3 +1,5 @@
+/* components/LoginForm.js */
+
 'use client';
 
 import { useState } from 'react';
@@ -35,7 +37,7 @@ export default function LoginForm({ onRegisterClick }) {
   return (
     <Card className="shadow-lg border-0 rounded-4">
       <Card.Body className="p-5">
-        <h3 className="fw-bold mb-4 text-center">
+        <h3 className="fw-bold mb-4 text-center font-script">
           Silakan masuk untuk melanjutkan
         </h3>
 
@@ -67,7 +69,12 @@ export default function LoginForm({ onRegisterClick }) {
           </div>
 
           <div className="d-flex justify-content-between mt-3">
-            <Button variant="link" className="p-0" onClick={onRegisterClick}>
+            <Button
+              variant="link"
+              className="p-0"
+              type="button"
+              onClick={onRegisterClick}
+            >
               Registrasi Manual
             </Button>
             <a href="/lupa-password" className="small">
