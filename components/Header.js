@@ -3,28 +3,35 @@
 
 import Image from 'next/image';
 import { Navbar, Nav, Container, Button } from 'react-bootstrap';
-import './Header.css'; // tambahan file css
+import './Header.css'; // tambahkan file css
 
 export default function Header() {
   return (
-    <Navbar bg="white" expand="lg" className="shadow-sm fixed-top" style={{ padding: '0.75rem 0' }}>
+    <Navbar
+      bg="white"
+      expand="lg"
+      className="shadow-sm fixed-top"
+      style={{ padding: '0.75rem 0' }}
+    >
       <Container>
         <Navbar.Brand href="/">
           <Image
             src="/logo-yuknikah.png"
             alt="yuknikah.id Logo"
-            width={180}
-            height={60}
+            width={200}
+            height={200}
             priority
             className="navbar-logo img-fluid"
           />
         </Navbar.Brand>
+
         <div className="d-flex d-lg-none">
           <Button variant="dark" href="/registrasi" size="sm">
             Uji Coba Gratis
           </Button>
           <Navbar.Toggle aria-controls="main-navbar" className="ms-2 border-0" />
         </div>
+
         <Navbar.Collapse id="main-navbar">
           {/* NAVIGASI */}
           <Nav className="mx-auto fw-semibold">

@@ -1,13 +1,14 @@
-/* components/Header.css */
+/* Ukuran logo default (desktop) */
 .navbar-logo {
-  max-height: 55px;
+  max-height: 80px; /* logo lebih besar */
   height: auto;
   width: auto;
+  object-fit: contain;
 }
 
-/* Saat layar kecil (HP) logo otomatis lebih kecil */
+/* Untuk layar kecil (HP) */
 @media (max-width: 576px) {
   .navbar-logo {
-    max-height: 40px;
+    max-height: 55px; /* lebih kecil biar navbar tidak tinggi */
   }
 }
