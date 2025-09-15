@@ -15,7 +15,7 @@ export default function PublicNav() {
   const pathname = usePathname();
   return (
     <header className="container" style={{ display: 'flex', alignItems: 'center', gap: 12, paddingTop: 12, paddingBottom: 12 }}>
-      <Link href="/" className="btn">yuknikah.id</Link>
+      <Link href="/" className="btn">JadiUndangan.id</Link>
       <nav style={{ display: 'flex', gap: 10, marginLeft: 'auto', alignItems: 'center' }}>
         {links.map(l => (
           <Link key={l.href} href={l.href} className={`btn ${pathname === l.href ? 'primary' : ''}`}>{l.label}</Link>
