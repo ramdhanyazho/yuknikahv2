@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
-import { registerUser } from '@/app/actions/registerUser';
+import { registerUser } from '@/app/actions';
 
 export default function RegisterForm({ onSuccess }) {
   const [message, setMessage] = useState(null);

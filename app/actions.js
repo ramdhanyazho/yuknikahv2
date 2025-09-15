@@ -1,11 +1,13 @@
 // app/actions.js
 'use server';
 
-// 1. Tambahkan 'signOut' ke dalam import
-import { signIn, signOut } from '@/lib/auth'; 
+import { signIn, signOut } from '@/lib/auth';
 import { AuthError } from 'next-auth';
+import { db } from '@/lib/turso';
+import { users } from '@/lib/schema';
+import bcrypt from 'bcrypt';
 
-// Fungsi authenticate yang sudah ada (jangan diubah)
+// Fungsi login manual (credentials)
 export async function authenticate(prevState, formData) {
   try {
     await signIn('credentials', formData);
@@ -22,7 +24,46 @@ export async function authenticate(prevState, formData) {
   }
 }
 
-// 2. Tambahkan fungsi baru ini untuk logout
+// Fungsi logout
 export async function handleSignOut() {
   await signOut();
+}
+
+// 🔹 Fungsi registrasi manual
+export async function registerUser(formData) {
+  try {
+    const name = formData.get('name');
+    const email = formData.get('email');
+    const password = formData.get('password');
+
+    if (!name || !email || !password) {
+      return { success: false, message: 'Semua field wajib diisi' };
+    }
+
+    // Cek apakah email sudah ada
+    const existingUser = await db
+      .select()
+      .from(users)
+      .where(users.email.eq(email))
+      .limit(1);
+
+    if (existingUser.length > 0) {
+      return { success: false, message: 'Email sudah terdaftar' };
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Simpan user baru
+    await db.insert(users).values({
+      name,
+      email,
+      password: hashedPassword,
+    });
+
+    return { success: true, message: 'Registrasi berhasil!' };
+  } catch (err) {
+    console.error('Register error:', err);
+    return { success: false, message: 'Terjadi kesalahan saat registrasi' };
+  }
 }
