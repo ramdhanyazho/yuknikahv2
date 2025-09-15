@@ -1,24 +1,27 @@
-// app/page.js
 'use client';
 
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
+import { useSession } from 'next-auth/react';
+
+// 🚨 Tambahkan agar tidak diprerender saat build
+export const dynamic = 'force-dynamic';
 
 export default function HomePage() {
+  const { data: session, status } = useSession();
+
   return (
     <div>
       <Header />
       <main>
         <Hero />
-        {/* 
-          Di sini kita bisa menambahkan komponen lain satu per satu:
-          - Kategori Pilihan
-          - Harga
-          - Fitur
-          - Testimoni
-          - FAQ
-          - Footer
-        */}
+        {/* Komponen lainnya bisa ditambahkan di bawah ini */}
+        {/* - Kategori Pilihan */}
+        {/* - Harga */}
+        {/* - Fitur */}
+        {/* - Testimoni */}
+        {/* - FAQ */}
+        {/* - Footer */}
       </main>
     </div>
   );
