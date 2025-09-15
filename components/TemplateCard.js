@@ -6,10 +6,6 @@ import { Card, Button, Row, Col } from 'react-bootstrap';
 import Link from 'next/link';
 
 export default function TemplateCard({ template }) {
-if (!template || !template.image || !template.name || !template.link || !template.id) {
-return null; // atau tampilkan error UI fallback
-}
-
 return (
 <Card className="mb-4 shadow-sm border-0">
 <Row className="g-0">
@@ -32,7 +28,7 @@ style={{ objectFit: 'cover' }}
 </Link>
 </Card.Text>
 <div className="text-warning mb-2">★★★★★</div>
-<p className="text-muted small mb-3">{template.uses ?? 0} kali Digunakan</p>
+<p className="text-muted small mb-3">{template.uses} kali Digunakan</p>
 <div className="mt-auto d-flex flex-wrap gap-2">
 <Button variant="outline-primary" href={template.link} target="_blank">
 Preview
