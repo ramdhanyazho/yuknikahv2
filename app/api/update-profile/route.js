@@ -1,26 +1,27 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import { query } from "@/lib/db";
 
-export async function POST(req: Request) {
+export async function POST(req) {
   try {
     const session = await auth();
-
-    if (!session) {
+    if (!session || !session.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const body = await req.json();
+    const { name, phone } = body;
 
-    // contoh update db
-    // await query("UPDATE users SET name = ? WHERE email = ?", [
-    //   body.name,
-    //   session.user.email,
-    // ]);
+    if (!name || !phone) {
+      return NextResponse.json({ error: "Name and phone are required" }, { status: 400 });
+    }
 
-    return NextResponse.json({
-      message: "Profile updated",
-      data: body,
-    });
+    await query(
+      "UPDATE users SET name = ?, phone = ? WHERE id = ?",
+      [name, phone, session.user.id]
+    );
+
+    return NextResponse.json({ message: "Profile updated successfully" });
   } catch (err) {
     console.error("Update Profile Error:", err);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

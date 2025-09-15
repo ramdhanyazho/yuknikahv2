@@ -1,161 +1,120 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Card, Form, Button, Alert, Spinner } from 'react-bootstrap';
+import { useState } from 'react';
+import { Form, Button, Card, Alert, Spinner } from 'react-bootstrap';
 
-export default function ProfilePage() {
-  const [form, setForm] = useState({ name: '', phone: '' });
-  const [image, setImage] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+export default function ProfilPage() {
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [avatar, setAvatar] = useState(null);
   const [message, setMessage] = useState(null);
-  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  // 🔹 Ambil data user dari session API
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await fetch('/api/auth/session');
-        const data = await res.json();
-        if (data?.user) {
-          setForm({ name: data.user.name || '', phone: data.user.phone || '' });
-          setImage(data.user.image || '');
-        }
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchUser();
-  }, []);
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  // 🔹 Submit profil (nama & phone)
-  const handleSubmit = async (e) => {
+  // Handle update profil
+  const handleUpdate = async (e) => {
     e.preventDefault();
-    setSaving(true);
+    setLoading(true);
     setMessage(null);
 
     try {
       const res = await fetch('/api/update-profile', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ name, phone }),
       });
+
       const data = await res.json();
-      setMessage(data.message);
-      setSuccess(res.ok);
+      if (!res.ok) throw new Error(data.error || 'Gagal update profil');
+
+      setMessage({ type: 'success', text: 'Profil berhasil diperbarui ✅' });
     } catch (err) {
-      setMessage('Gagal menyimpan profil');
-      setSuccess(false);
+      setMessage({ type: 'danger', text: err.message });
     } finally {
-      setSaving(false);
+      setLoading(false);
     }
   };
 
-  // 🔹 Upload Avatar
-  const handleUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    setSaving(true);
+  // Handle upload avatar
+  const handleAvatarUpload = async (e) => {
+    e.preventDefault();
+    if (!avatar) {
+      setMessage({ type: 'warning', text: 'Pilih file avatar dulu!' });
+      return;
+    }
+
+    setLoading(true);
     setMessage(null);
 
-    const formData = new FormData();
-    formData.append('file', file);
-
     try {
+      const formData = new FormData();
+      formData.append('file', avatar);
+
       const res = await fetch('/api/upload-avatar', {
         method: 'POST',
         body: formData,
       });
+
       const data = await res.json();
-      setMessage(data.message);
-      setSuccess(res.ok);
-      if (res.ok) setImage(data.url);
+      if (!res.ok) throw new Error(data.error || 'Gagal upload avatar');
+
+      setMessage({ type: 'success', text: 'Avatar berhasil diperbarui ✅' });
     } catch (err) {
-      setMessage('Gagal upload avatar');
-      setSuccess(false);
+      setMessage({ type: 'danger', text: err.message });
     } finally {
-      setSaving(false);
+      setLoading(false);
     }
   };
 
-  if (loading) return <Spinner animation="border" />;
-
   return (
-    <Card className="shadow-lg border-0 rounded-4">
-      <Card.Body className="p-5">
-        <h3 className="fw-bold mb-4 text-center">Profil Saya</h3>
+    <Card className="shadow-sm p-4">
+      <h3 className="mb-4">Profil Saya</h3>
 
-        {message && (
-          <Alert variant={success ? 'success' : 'danger'}>{message}</Alert>
-        )}
+      {message && <Alert variant={message.type}>{message.text}</Alert>}
 
-        <div className="text-center mb-4">
-          <label htmlFor="avatar-upload" style={{ cursor: 'pointer' }}>
-            {image ? (
-              <img
-                src={image}
-                alt="Avatar"
-                width={100}
-                height={100}
-                className="rounded-circle border"
-              />
-            ) : (
-              <div
-                className="rounded-circle bg-secondary text-white d-flex justify-content-center align-items-center"
-                style={{ width: 100, height: 100 }}
-              >
-                {form.name ? form.name[0].toUpperCase() : 'U'}
-              </div>
-            )}
-          </label>
-          <input
-            type="file"
-            id="avatar-upload"
-            accept="image/*"
-            onChange={handleUpload}
-            hidden
+      {/* Form Update Profil */}
+      <Form onSubmit={handleUpdate} className="mb-4">
+        <Form.Group className="mb-3">
+          <Form.Label>Nama Lengkap</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Masukkan nama"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
           />
-          <p className="small text-muted mt-2">Klik avatar untuk ganti foto</p>
-        </div>
+        </Form.Group>
 
-        <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3">
-            <Form.Label>Nama Lengkap</Form.Label>
-            <Form.Control
-              type="text"
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-              required
-              size="lg"
-            />
-          </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>Nomor Telepon</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Masukkan nomor telepon"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            required
+          />
+        </Form.Group>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Nomor Telepon</Form.Label>
-            <Form.Control
-              type="text"
-              name="phone"
-              value={form.phone}
-              onChange={handleChange}
-              required
-              size="lg"
-            />
-          </Form.Group>
+        <Button type="submit" variant="primary" disabled={loading}>
+          {loading ? <Spinner size="sm" animation="border" /> : 'Update Profil'}
+        </Button>
+      </Form>
 
-          <div className="d-grid">
-            <Button type="submit" size="lg" variant="primary" disabled={saving}>
-              {saving ? 'Menyimpan...' : 'Simpan Profil'}
-            </Button>
-          </div>
-        </Form>
-      </Card.Body>
+      {/* Form Upload Avatar */}
+      <Form onSubmit={handleAvatarUpload}>
+        <Form.Group className="mb-3">
+          <Form.Label>Upload Avatar</Form.Label>
+          <Form.Control
+            type="file"
+            accept="image/*"
+            onChange={(e) => setAvatar(e.target.files[0])}
+          />
+        </Form.Group>
+
+        <Button type="submit" variant="success" disabled={loading}>
+          {loading ? <Spinner size="sm" animation="border" /> : 'Upload Avatar'}
+        </Button>
+      </Form>
     </Card>
   );
 }
