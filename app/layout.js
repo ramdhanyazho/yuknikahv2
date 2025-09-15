@@ -1,17 +1,20 @@
 // app/layout.js
+'use client';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@splidejs/react-splide/css';
 import './globals.css';
 import { Poppins, Dancing_Script } from 'next/font/google';
+import { SessionProvider } from 'next-auth/react';
 
-// Konfigurasi font Poppins
+// Font: Poppins
 const poppins = Poppins({
   subsets: ['latin'],
   weight: ['400', '600', '700'],
   variable: '--font-poppins',
 });
 
-// Konfigurasi font Dancing Script
+// Font: Dancing Script
 const dancingScript = Dancing_Script({
   subsets: ['latin'],
   weight: ['700'],
@@ -30,7 +33,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="id">
       <body className={`${poppins.variable} ${dancingScript.variable} font-sans`}>
-        {children}
+        <SessionProvider>
+          {children}
+        </SessionProvider>
       </body>
     </html>
   );
