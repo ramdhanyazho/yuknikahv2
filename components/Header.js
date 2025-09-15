@@ -8,7 +8,8 @@ import Link from 'next/link';
 import './Header.css';
 
 export default function Header() {
-  const { data: session } = useSession();
+  const sessionResult = useSession();
+  const session = sessionResult?.data ?? null;
 
   // Ambil inisial jika tidak ada foto profil
   const getInitials = (name) => {
@@ -87,7 +88,7 @@ export default function Header() {
                   alignItems: 'center',
                 }}
               >
-                {session.user.image ? (
+                {session.user?.image ? (
                   <Image
                     src={session.user.image}
                     alt="Avatar"
@@ -110,10 +111,10 @@ export default function Header() {
                       marginRight: '8px',
                     }}
                   >
-                    {getInitials(session.user.name)}
+                    {getInitials(session.user?.name)}
                   </div>
                 )}
-                <span className="fw-semibold">{session.user.name}</span>
+                <span className="fw-semibold">{session.user?.name}</span>
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
