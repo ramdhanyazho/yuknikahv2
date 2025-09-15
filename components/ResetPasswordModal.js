@@ -1,32 +1,54 @@
 // components/ResetPasswordModal.js
+
 'use client';
 
 import { useState } from 'react';
-import { Modal, Form, Button, Alert } from 'react-bootstrap';
+import { Modal, Button, Form, Alert, Spinner } from 'react-bootstrap';
 
 export default function ResetPasswordModal({ show, handleClose }) {
   const [message, setMessage] = useState(null);
   const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage(null);
+    setSuccess(false);
+    setLoading(true);
 
-    const email = e.target.email.value;
-    const newPassword = e.target.newPassword.value;
+    const formData = new FormData(e.target);
+    const currentPassword = formData.get('currentPassword');
+    const newPassword = formData.get('newPassword');
+    const confirmPassword = formData.get('confirmPassword');
 
-    const res = await fetch('/api/reset-password', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, newPassword }),
-    });
+    if (newPassword !== confirmPassword) {
+      setMessage('Password baru dan konfirmasi tidak cocok');
+      setSuccess(false);
+      setLoading(false);
+      return;
+    }
 
-    const data = await res.json();
-    setMessage(data.message);
-    setSuccess(data.success);
+    try {
+      const res = await fetch('/api/reset-password', {
+        method: 'POST',
+        body: JSON.stringify({ currentPassword, newPassword }),
+      });
 
-    if (data.success) {
-      e.target.reset();
+      const data = await res.json();
+      setMessage(data.message);
+      setSuccess(data.success);
+
+      if (data.success) {
+        setTimeout(() => {
+          handleClose();
+        }, 1500);
+      }
+    } catch (err) {
+      console.error(err);
+      setMessage('Terjadi kesalahan server');
+      setSuccess(false);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -40,17 +62,36 @@ export default function ResetPasswordModal({ show, handleClose }) {
           <Alert variant={success ? 'success' : 'danger'}>{message}</Alert>
         )}
         <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3" controlId="email">
-            <Form.Label>Email</Form.Label>
-            <Form.Control type="email" name="email" required />
+          <Form.Group className="mb-3">
+            <Form.Label>Password Saat Ini</Form.Label>
+            <Form.Control
+              type="password"
+              name="currentPassword"
+              required
+            />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="newPassword">
+
+          <Form.Group className="mb-3">
             <Form.Label>Password Baru</Form.Label>
-            <Form.Control type="password" name="newPassword" required />
+            <Form.Control
+              type="password"
+              name="newPassword"
+              required
+            />
           </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Konfirmasi Password Baru</Form.Label>
+            <Form.Control
+              type="password"
+              name="confirmPassword"
+              required
+            />
+          </Form.Group>
+
           <div className="d-grid">
-            <Button type="submit" variant="primary">
-              Reset Password
+            <Button type="submit" variant="primary" disabled={loading}>
+              {loading ? <Spinner animation="border" size="sm" /> : 'Reset Password'}
             </Button>
           </div>
         </Form>

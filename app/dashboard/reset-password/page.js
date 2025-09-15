@@ -1,106 +1,100 @@
 // app/dashboard/reset-password/page.js
+
 'use client';
 
 import { useState } from 'react';
-import { Card, Form, Button, Alert, Spinner } from 'react-bootstrap';
+import { Form, Button, Card, Alert } from 'react-bootstrap';
 
 export default function ResetPasswordPage() {
-  const [oldPassword, setOldPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [message, setMessage] = useState(null);
+  const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
-    setSuccess(null);
-
-    // ✅ Validasi sederhana
-    if (!oldPassword || !newPassword || !confirmPassword) {
-      return setError('Semua field wajib diisi');
-    }
-    if (newPassword.length < 6) {
-      return setError('Password baru minimal 6 karakter');
-    }
-    if (newPassword !== confirmPassword) {
-      return setError('Konfirmasi password tidak sama');
-    }
-
+    setMessage(null);
     setLoading(true);
+
+    const formData = new FormData(e.target);
+    const oldPassword = formData.get('oldPassword');
+    const newPassword = formData.get('newPassword');
+    const confirmPassword = formData.get('confirmPassword');
+
+    if (newPassword !== confirmPassword) {
+      setMessage('Password baru dan konfirmasi tidak sama!');
+      setSuccess(false);
+      setLoading(false);
+      return;
+    }
 
     try {
       const res = await fetch('/api/reset-password', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ oldPassword, newPassword }),
+        headers: { 'Content-Type': 'application/json' },
       });
 
       const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || 'Gagal reset password');
-      }
-
-      setSuccess('Password berhasil direset');
-      setOldPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
+      setMessage(data.message);
+      setSuccess(res.ok);
     } catch (err) {
-      setError(err.message);
+      console.error(err);
+      setMessage('Terjadi kesalahan server.');
+      setSuccess(false);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div>
-      <h2 className="fw-bold mb-4">Reset Password</h2>
-      <Card className="shadow-sm border-0">
-        <Card.Body>
-          {error && <Alert variant="danger">{error}</Alert>}
-          {success && <Alert variant="success">{success}</Alert>}
+    <Card className="shadow-lg border-0 rounded-4">
+      <Card.Body className="p-5">
+        <h3 className="fw-bold mb-4 text-center">Reset Password</h3>
 
-          <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="oldPassword">
-              <Form.Label>Password Lama</Form.Label>
-              <Form.Control
-                type="password"
-                value={oldPassword}
-                onChange={(e) => setOldPassword(e.target.value)}
-                required
-              />
-            </Form.Group>
+        {message && (
+          <Alert variant={success ? 'success' : 'danger'}>{message}</Alert>
+        )}
 
-            <Form.Group className="mb-3" controlId="newPassword">
-              <Form.Label>Password Baru</Form.Label>
-              <Form.Control
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                required
-              />
-            </Form.Group>
+        <Form onSubmit={handleSubmit}>
+          <Form.Group className="mb-3">
+            <Form.Control
+              type="password"
+              name="oldPassword"
+              placeholder="Password Lama"
+              size="lg"
+              required
+            />
+          </Form.Group>
 
-            <Form.Group className="mb-3" controlId="confirmPassword">
-              <Form.Label>Konfirmasi Password Baru</Form.Label>
-              <Form.Control
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-              />
-            </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Control
+              type="password"
+              name="newPassword"
+              placeholder="Password Baru"
+              size="lg"
+              required
+              minLength={6}
+            />
+          </Form.Group>
 
-            <div className="d-grid">
-              <Button type="submit" variant="primary" disabled={loading}>
-                {loading ? <Spinner size="sm" animation="border" /> : 'Reset Password'}
-              </Button>
-            </div>
-          </Form>
-        </Card.Body>
-      </Card>
-    </div>
+          <Form.Group className="mb-3">
+            <Form.Control
+              type="password"
+              name="confirmPassword"
+              placeholder="Konfirmasi Password Baru"
+              size="lg"
+              required
+              minLength={6}
+            />
+          </Form.Group>
+
+          <div className="d-grid">
+            <Button type="submit" size="lg" variant="primary" disabled={loading}>
+              {loading ? 'Menyimpan...' : 'Simpan Password'}
+            </Button>
+          </div>
+        </Form>
+      </Card.Body>
+    </Card>
   );
 }

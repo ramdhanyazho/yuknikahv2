@@ -1,39 +1,42 @@
 // app/api/reset-password/route.js
-import { NextResponse } from 'next/server';
+
 import { getServerSession } from 'next-auth';
-import bcrypt from 'bcryptjs';
+import { authOptions } from '@/lib/auth';
 import { query } from '@/lib/db';
-import { authOptions } from '@/lib/auth'; // pastikan authOptions ada
+import bcrypt from 'bcryptjs';
 
 export async function POST(req) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!session || !session.user?.email) {
+      return new Response(JSON.stringify({ message: 'Unauthorized' }), { status: 401 });
     }
 
     const { oldPassword, newPassword } = await req.json();
     const email = session.user.email;
 
-    // 1. Ambil user dari DB
-    const userRes = await query('SELECT * FROM users WHERE email = ?', [email]);
-    const user = userRes.rows[0];
+    // 🔹 Cek user lama
+    const result = await query('SELECT * FROM users WHERE email = ?', [email]);
+    const user = result.rows[0];
     if (!user) {
-      return NextResponse.json({ error: 'User tidak ditemukan' }, { status: 404 });
+      return new Response(JSON.stringify({ message: 'User tidak ditemukan' }), { status: 404 });
     }
 
-    // 2. Cek password lama
+    // 🔹 Verifikasi password lama
     const valid = await bcrypt.compare(oldPassword, user.password);
     if (!valid) {
-      return NextResponse.json({ error: 'Password lama salah' }, { status: 400 });
+      return new Response(JSON.stringify({ message: 'Password lama salah' }), { status: 400 });
     }
 
-    // 3. Hash password baru
+    // 🔹 Hash password baru
     const hashed = await bcrypt.hash(newPassword, 10);
+
+    // 🔹 Update DB
     await query('UPDATE users SET password = ? WHERE email = ?', [hashed, email]);
 
-    return NextResponse.json({ success: true });
+    return new Response(JSON.stringify({ message: 'Password berhasil diubah' }), { status: 200 });
   } catch (err) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    console.error('Reset error:', err);
+    return new Response(JSON.stringify({ message: 'Server error' }), { status: 500 });
   }
 }
