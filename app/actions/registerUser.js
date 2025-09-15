@@ -1,42 +1,51 @@
+// app/actions/registerUser.js
 'use server';
 
 import { db } from '@/lib/turso';
 import { users } from '@/lib/schema';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
+import { z } from 'zod';
+
+const RegisterSchema = z.object({
+  name: z.string().min(3, { message: "Nama minimal 3 karakter." }),
+  email: z.string().email({ message: "Format email tidak valid." }),
+  password: z.string().min(6, { message: "Password minimal 6 karakter." }),
+});
 
 export async function registerUser(prevState, formData) {
-  console.log("=== registerUser terpanggil ===");
+  const validatedFields = RegisterSchema.safeParse(
+    Object.fromEntries(formData.entries())
+  );
+
+  if (!validatedFields.success) {
+    console.log('Validasi gagal:', validatedFields.error.format());
+    return {
+      success: false,
+      message: 'Input tidak valid. Mohon periksa kembali data Anda.',
+    };
+  }
+
+  const { name, email, password } = validatedFields.data;
+  const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
-    const name = formData.get("name");
-    const email = formData.get("email");
-    const password = formData.get("password");
+    console.log('Mencoba simpan user:', { name, email });
 
-    console.log("Data diterima dari form:", { name, email, password });
-
-    if (!name || !email || !password) {
-      console.log("Form kosong / tidak lengkap");
-      return { success: false, message: "Semua field harus diisi" };
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    console.log("Password berhasil di-hash:", hashedPassword.substring(0, 10) + "...");
-
-    // Coba insert ke DB
-    const result = await db.insert(users).values({
+    await db.insert(users).values({
       name,
       email,
       password: hashedPassword,
-      role: "CLIENT",
+      role: 'CLIENT',
     });
 
-    console.log("Insert result:", result);
-
-    return { success: true, message: "User berhasil dibuat!" };
+    console.log('User berhasil dibuat!');
+    return { success: true, message: 'Registrasi berhasil! Anda akan diarahkan ke halaman login.' };
 
   } catch (e) {
-    console.error("Error registerUser:", e);
-    return { success: false, message: "Terjadi error: " + e.message };
+    console.error('Error saat registrasi:', e);
+    if (e.message.includes('UNIQUE constraint failed')) {
+      return { success: false, message: 'Email ini sudah terdaftar.' };
+    }
+    return { success: false, message: 'Server error: ' + e.message };
   }
 }
