@@ -3,27 +3,30 @@
 
 import Image from 'next/image';
 import { Navbar, Nav, Container, Button } from 'react-bootstrap';
+import './Header.css'; // tambahan file css
 
 export default function Header() {
   return (
     <Navbar bg="white" expand="lg" className="shadow-sm fixed-top" style={{ padding: '0.75rem 0' }}>
       <Container>
         <Navbar.Brand href="/">
-           <Image 
+          <Image
             src="/logo-yuknikah.png"
             alt="yuknikah.id Logo"
-            width={100}
-            height={100}
+            width={180}
+            height={60}
             priority
-            style={{ width: 'auto', height: '100x' }} // Memastikan tinggi konsisten
+            className="navbar-logo img-fluid"
           />
         </Navbar.Brand>
         <div className="d-flex d-lg-none">
-            <Button variant="dark" href="/registrasi" size="sm">Uji Coba Gratis</Button>
-            <Navbar.Toggle aria-controls="main-navbar" className="ms-2 border-0" />
+          <Button variant="dark" href="/registrasi" size="sm">
+            Uji Coba Gratis
+          </Button>
+          <Navbar.Toggle aria-controls="main-navbar" className="ms-2 border-0" />
         </div>
         <Navbar.Collapse id="main-navbar">
-          {/* NAVIGASI SUDAH DISESUAIKAN */}
+          {/* NAVIGASI */}
           <Nav className="mx-auto fw-semibold">
             <Nav.Link href="/">Home</Nav.Link>
             <Nav.Link href="/harga">Harga</Nav.Link>
@@ -31,7 +34,13 @@ export default function Header() {
             <Nav.Link href="/artikel">Artikel</Nav.Link>
             <Nav.Link href="/login">Login</Nav.Link>
           </Nav>
-          <Button variant="dark" href="/registrasi" className="d-none d-lg-block fw-semibold px-4">Uji Coba Gratis</Button>
+          <Button
+            variant="dark"
+            href="/registrasi"
+            className="d-none d-lg-block fw-semibold px-4"
+          >
+            Uji Coba Gratis
+          </Button>
         </Navbar.Collapse>
       </Container>
     </Navbar>
