@@ -5,9 +5,10 @@ import { signIn, signOut } from '@/lib/auth';
 import { AuthError } from 'next-auth';
 import { db } from '@/lib/turso';
 import { users } from '@/lib/schema';
+import { eq } from 'drizzle-orm';
 import bcrypt from 'bcrypt';
 
-// Fungsi login manual (credentials)
+// 🔹 Fungsi login manual (credentials)
 export async function authenticate(prevState, formData) {
   try {
     await signIn('credentials', formData);
@@ -24,7 +25,7 @@ export async function authenticate(prevState, formData) {
   }
 }
 
-// Fungsi logout
+// 🔹 Fungsi logout
 export async function handleSignOut() {
   await signOut();
 }
@@ -40,21 +41,21 @@ export async function registerUser(formData) {
       return { success: false, message: 'Semua field wajib diisi' };
     }
 
-    // Cek apakah email sudah ada
+    // cek apakah email sudah ada
     const existingUser = await db
       .select()
       .from(users)
-      .where(users.email.eq(email))
+      .where(eq(users.email, email))
       .limit(1);
 
     if (existingUser.length > 0) {
       return { success: false, message: 'Email sudah terdaftar' };
     }
 
-    // Hash password
+    // hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Simpan user baru
+    // simpan user baru
     await db.insert(users).values({
       name,
       email,
