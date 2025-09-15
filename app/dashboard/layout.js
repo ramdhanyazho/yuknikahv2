@@ -1,7 +1,6 @@
-// app/dashboard/layout.js
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Container,
   Row,
@@ -10,12 +9,13 @@ import {
   Navbar,
   Button,
   Offcanvas,
+  Dropdown,
+  Spinner,
 } from 'react-bootstrap';
 import Image from 'next/image';
 import Link from 'next/link';
 import SignOutButton from '@/components/SignOutButton';
 
-// Komponen Sidebar Navigasi
 function SidebarNav() {
   return (
     <Nav
@@ -51,7 +51,6 @@ function SidebarNav() {
       </Nav.Link>
 
       <p className="text-muted small text-uppercase mt-4">Akun</p>
-      {/* 👉 Menu Reset Password diarahkan ke page */}
       <Nav.Link as={Link} href="/dashboard/reset-password" className="fw-medium text-dark">
         Reset Password
       </Nav.Link>
@@ -66,8 +65,27 @@ function SidebarNav() {
 
 export default function DashboardLayout({ children }) {
   const [show, setShow] = useState(false);
+  const [session, setSession] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  // 🔹 Ambil session dari /api/auth/session
+  useEffect(() => {
+    const fetchSession = async () => {
+      try {
+        const res = await fetch('/api/auth/session');
+        const data = await res.json();
+        setSession(data?.user || null);
+      } catch (err) {
+        console.error('Gagal fetch session:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSession();
+  }, []);
 
   return (
     <Container fluid>
@@ -79,14 +97,50 @@ export default function DashboardLayout({ children }) {
 
         {/* Main Content */}
         <Col lg={10} md={12} style={{ padding: '1.5rem', backgroundColor: '#f8f9fa' }}>
-          {/* Navbar Mobile */}
-          <Navbar bg="light" className="d-lg-none mb-3 rounded">
-            <Container fluid>
-              <Button variant="outline-secondary" onClick={handleShow}>
-                ☰
-              </Button>
-              <Navbar.Text className="fw-bold">Nama Pengguna</Navbar.Text>
-            </Container>
+          {/* Navbar Top */}
+          <Navbar bg="light" className="mb-3 rounded d-flex justify-content-between px-3">
+            {/* Mobile Button */}
+            <Button variant="outline-secondary" className="d-lg-none" onClick={handleShow}>
+              ☰
+            </Button>
+
+            {/* Status Login */}
+            {loading ? (
+              <Spinner animation="border" size="sm" />
+            ) : session ? (
+              <Dropdown align="end">
+                <Dropdown.Toggle variant="light" id="dropdown-basic" className="d-flex align-items-center">
+                  {session.image ? (
+                    <img
+                      src={session.image}
+                      alt="Avatar"
+                      width={32}
+                      height={32}
+                      className="rounded-circle me-2"
+                    />
+                  ) : (
+                    <div
+                      className="rounded-circle bg-secondary text-white d-flex justify-content-center align-items-center me-2"
+                      style={{ width: 32, height: 32, fontSize: 14 }}
+                    >
+                      {session.name ? session.name[0].toUpperCase() : 'U'}
+                    </div>
+                  )}
+                  <span className="fw-semibold">{session.name}</span>
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  <Dropdown.Item as={Link} href="/dashboard/profil">Profil Saya</Dropdown.Item>
+                  <Dropdown.Item as={Link} href="/dashboard/reset-password">Ganti Password</Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item>
+                    <SignOutButton />
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            ) : (
+              <span className="text-muted">Belum login</span>
+            )}
           </Navbar>
 
           {/* Offcanvas Sidebar (Mobile) */}
