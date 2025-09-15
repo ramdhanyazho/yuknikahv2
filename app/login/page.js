@@ -26,10 +26,10 @@ export default function LoginPage() {
       >
         <Container>
           <Row className="align-items-center justify-content-center">
-            {/* Gambar ilustrasi */}
+            {/* Gambar ilustrasi dari folder public */}
             <Col lg={6} className="d-none d-lg-block">
               <Image
-                src="https://placehold.co/600x400/EFEFEF/333333?text=Gambar+Login"
+                src="/ilustration-login.png"
                 alt="Login illustration"
                 width={600}
                 height={400}
