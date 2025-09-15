@@ -3,8 +3,7 @@
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 
-// 🚨 WAJIB tambahkan agar tidak di-prerender secara statis oleh Vercel
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic'; // WAJIB agar useSession tidak error saat prerender
 
 export default function HomePage() {
   return (
@@ -12,7 +11,7 @@ export default function HomePage() {
       <Header />
       <main>
         <Hero />
-        {/* Tambahkan komponen lain di sini kalau perlu */}
+        {/* Tambahkan komponen lain di sini jika ada */}
       </main>
     </div>
   );
