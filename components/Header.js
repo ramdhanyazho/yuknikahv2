@@ -8,8 +8,7 @@ import Link from 'next/link';
 import './Header.css';
 
 export default function Header() {
-  const sessionResult = useSession();
-  const session = sessionResult?.data ?? null;
+  const { data: session } = useSession();
 
   // Ambil inisial jika tidak ada foto profil
   const getInitials = (name) => {
@@ -41,11 +40,11 @@ export default function Header() {
         </Navbar.Brand>
 
         <div className="d-flex d-lg-none">
-          {!session ? (
+          {!session && (
             <Button variant="dark" href="/registrasi" size="sm">
               Uji Coba Gratis
             </Button>
-          ) : null}
+          )}
           <Navbar.Toggle aria-controls="main-navbar" className="ms-2 border-0" />
         </div>
 
