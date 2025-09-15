@@ -2,26 +2,17 @@
 
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
-import { useSession } from 'next-auth/react';
 
-// 🚨 Tambahkan agar tidak diprerender saat build
+// 🚨 WAJIB tambahkan agar tidak di-prerender secara statis oleh Vercel
 export const dynamic = 'force-dynamic';
 
 export default function HomePage() {
-  const { data: session, status } = useSession();
-
   return (
     <div>
       <Header />
       <main>
         <Hero />
-        {/* Komponen lainnya bisa ditambahkan di bawah ini */}
-        {/* - Kategori Pilihan */}
-        {/* - Harga */}
-        {/* - Fitur */}
-        {/* - Testimoni */}
-        {/* - FAQ */}
-        {/* - Footer */}
+        {/* Tambahkan komponen lain di sini kalau perlu */}
       </main>
     </div>
   );
