@@ -1,37 +1,28 @@
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import { query } from '@/lib/db';
+import { NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
 
-export async function POST(req) {
+export async function POST(req: Request) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
 
     if (!session) {
-      return new Response(JSON.stringify({ message: 'Unauthorized' }), { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { name, phone } = await req.json();
+    const body = await req.json();
 
-    if (!name || !phone) {
-      return new Response(
-        JSON.stringify({ message: 'Nama dan nomor telepon wajib diisi' }),
-        { status: 400 }
-      );
-    }
+    // contoh update db
+    // await query("UPDATE users SET name = ? WHERE email = ?", [
+    //   body.name,
+    //   session.user.email,
+    // ]);
 
-    await query('UPDATE users SET name = ?, phone = ? WHERE email = ?', [
-      name,
-      phone,
-      session.user.email,
-    ]);
-
-    return new Response(JSON.stringify({ message: 'Profil berhasil diupdate' }), {
-      status: 200,
+    return NextResponse.json({
+      message: "Profile updated",
+      data: body,
     });
   } catch (err) {
-    console.error('Update profile error:', err);
-    return new Response(JSON.stringify({ message: 'Internal Server Error' }), {
-      status: 500,
-    });
+    console.error("Update Profile Error:", err);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

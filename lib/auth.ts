@@ -4,12 +4,11 @@ import Credentials from 'next-auth/providers/credentials';
 import { query } from '@/lib/db';
 import bcrypt from 'bcrypt';
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const authOptions = {
   providers: [
     Credentials({
       async authorize(credentials) {
         const { email, password } = credentials;
-
         const res = await query(
           'SELECT id, name, email, password, role FROM users WHERE email = ?',
           [email]
@@ -18,7 +17,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (res.rows.length === 0) return null;
 
         const user = res.rows[0];
-
         const isValid = await bcrypt.compare(password, user.password);
         if (!isValid) return null;
 
@@ -34,9 +32,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   pages: {
     signIn: '/login',
   },
-  session: {
-    strategy: 'jwt',
-  },
+  session: { strategy: 'jwt' },
   callbacks: {
     async jwt({ token, user }) {
       if (user) token.role = user.role;
@@ -47,4 +43,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return session;
     },
   },
-});
+};
+
+export const { handlers, signIn, signOut, auth } = NextAuth(authOptions);
