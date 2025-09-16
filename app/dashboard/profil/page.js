@@ -1,3 +1,5 @@
+/* /app/dashboard/profil/page.js */
+
 'use client';
 
 import { useState } from 'react';
@@ -17,16 +19,20 @@ export default function ProfilPage() {
     setMessage(null);
 
     try {
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('phone', phone);
+
       const res = await fetch('/api/update-profile', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, phone }),
+        body: formData,           // pakai FormData, bukan JSON
+        credentials: 'include',   // penting agar cookie session dikirim
       });
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Gagal update profil');
 
-      setMessage({ type: 'success', text: 'Profil berhasil diperbarui ✅' });
+      setMessage({ type: 'success', text: data.message });
     } catch (err) {
       setMessage({ type: 'danger', text: err.message });
     } finally {
@@ -52,12 +58,14 @@ export default function ProfilPage() {
       const res = await fetch('/api/upload-avatar', {
         method: 'POST',
         body: formData,
+        credentials: 'include',  // WAJIB
       });
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Gagal upload avatar');
 
-      setMessage({ type: 'success', text: 'Avatar berhasil diperbarui ✅' });
+      setMessage({ type: 'success', text: data.message });
+      setAvatar(null); // reset input file
     } catch (err) {
       setMessage({ type: 'danger', text: err.message });
     } finally {
