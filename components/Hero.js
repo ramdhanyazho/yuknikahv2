@@ -1,13 +1,23 @@
 // components/Hero.js
 'use client';
 
+import { useEffect } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import { useSession } from 'next-auth/react';
 
 export default function Hero() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  // Refresh halaman jika status session berubah
+  useEffect(() => {
+    if (status !== 'loading') {
+      router.refresh(); // pastikan session up-to-date
+    }
+  }, [status]);
 
   return (
     <section
@@ -25,19 +35,19 @@ export default function Hero() {
               </h1>
 
               <p className="mt-3 fs-6 text-muted">
-                {session
-                  ? `Hai, ${session.user.name}! Siap bikin undanganmu sekarang?`
-                  : (
-                    <>
-                      Coba sekarang dan buat undangan digital uji coba <strong>GRATIS</strong>{' '}
-                      untuk segala acara dalam waktu <strong>5 menit</strong>. Gak mau ribet?
-                      Minta <strong>dibuatin admin</strong> uji coba Gratis, bayar setelah jadi.
-                    </>
-                  )}
+                {status === 'authenticated' ? (
+                  `Hai, ${session.user.name}! Siap bikin undanganmu sekarang?`
+                ) : (
+                  <>
+                    Coba sekarang dan buat undangan digital uji coba <strong>GRATIS</strong>{' '}
+                    untuk segala acara dalam waktu <strong>5 menit</strong>. Gak mau ribet?
+                    Minta <strong>dibuatin admin</strong> uji coba Gratis, bayar setelah jadi.
+                  </>
+                )}
               </p>
 
               <div className="mt-4">
-                {!session ? (
+                {status === 'unauthenticated' ? (
                   <>
                     <Button
                       href="/registrasi"
@@ -56,7 +66,7 @@ export default function Hero() {
                       Dibuatin Admin Aja
                     </Button>
                   </>
-                ) : (
+                ) : status === 'authenticated' ? (
                   <Button
                     href="/dashboard"
                     variant="success"
@@ -65,7 +75,7 @@ export default function Hero() {
                   >
                     Masuk ke Dashboard
                   </Button>
-                )}
+                ) : null}
               </div>
             </div>
           </Col>

@@ -1,14 +1,18 @@
 // components/Header.js
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import { Navbar, Nav, Container, Button, Dropdown } from 'react-bootstrap';
 import { useSession, signOut } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import './Header.css';
 
 export default function Header() {
   const { data: session } = useSession();
+  const router = useRouter();
+  const [loggingOut, setLoggingOut] = useState(false);
 
   // Ambil inisial jika tidak ada foto profil
   const getInitials = (name) => {
@@ -18,6 +22,14 @@ export default function Header() {
       .map((n) => n[0])
       .join('')
       .toUpperCase();
+  };
+
+  // Logout handler dengan refresh dan redirect
+  const handleLogout = async () => {
+    setLoggingOut(true);
+    await signOut({ redirect: false }); // jangan langsung redirect
+    router.push('/login');              // arahkan manual ke login
+    router.refresh();                   // paksa refresh session state
   };
 
   return (
@@ -124,8 +136,8 @@ export default function Header() {
                   Ganti Password
                 </Dropdown.Item>
                 <Dropdown.Divider />
-                <Dropdown.Item onClick={() => signOut({ callbackUrl: '/login' })}>
-                  Logout
+                <Dropdown.Item onClick={handleLogout} disabled={loggingOut}>
+                  {loggingOut ? 'Logging out...' : 'Logout'}
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
