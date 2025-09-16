@@ -1,11 +1,16 @@
-// app/template/page.js
+// app/contoh/page.js
 import Header from '@/components/Header';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 
 // Disable prerender untuk cegah error build di Vercel
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
-// Daftar kategori template sesuai contoh referensi
+export const metadata = {
+  title: 'Contoh Undangan Digital | yuknikah.id',
+  description: 'Lihat berbagai contoh undangan digital untuk acara kamu.',
+};
+
+// Daftar kategori undangan
 const categories = [
   "Undangan Pernikahan", "Undangan Khitanan", "Undangan Natal", "Undangan Aqiqah",
   "Undangan Mepandes", "Undangan Tasyakuran", "Undangan Halal Bi Halal", "Undangan Formal",
@@ -13,12 +18,7 @@ const categories = [
   "Undangan Ulang Tahun (Dewasa)"
 ];
 
-export const metadata = {
-  title: 'Pilih Tema Undangan Digital | yuknikah.id',
-  description: 'Temukan tema undangan online untuk berbagai jenis acara.',
-};
-
-export default function TemplatePage() {
+export default function ContohPage() {
   return (
     <div>
       <Header />
@@ -26,12 +26,12 @@ export default function TemplatePage() {
         <Container>
           <Row className="justify-content-center text-center">
             <Col lg={8}>
-              <p className="text-muted mb-2">PILIH TEMA</p>
-              <h1 className="display-5 fw-bold">Sesuaikan Tema Undanganmu</h1>
+              <p className="text-muted mb-2">CONTOH UNDANGAN</p>
+              <h1 className="display-5 fw-bold">Contoh Undangan Digital</h1>
               <p className="lead text-muted mt-3">
                 Gak perlu capek edit-edit tampilan, temanya bisa kalian ubah sesuka hati!
               </p>
-              <h2 className="mt-5 mb-4 fw-semibold">Lihat Contoh Undangan</h2>
+              <h2 className="mt-5 mb-4 fw-semibold">Semua Contoh Undangan</h2>
             </Col>
           </Row>
 
@@ -41,7 +41,7 @@ export default function TemplatePage() {
                 {categories.map((category, index) => (
                   <Button
                     key={index}
-                    href={`/template/${category.toLowerCase().replace(/\s/g, '-').replace(/[()/]/g, '')}`}
+                    href={`/contoh/${category.toLowerCase().replace(/\s/g, '-').replace(/[()/]/g, '')}`}
                     variant="primary"
                     size="lg"
                     className="text-start p-3 fw-semibold"
@@ -50,12 +50,12 @@ export default function TemplatePage() {
                   </Button>
                 ))}
                 <Button
-                  href="/contoh"
+                  href="/template" // bisa diarahkan ke page eksplor lainnya
                   variant="success"
                   size="lg"
                   className="text-start p-3 mt-3 fw-semibold"
                 >
-                  Cari Undangan Lainnya
+                  Jelajahi Tema Lainnya
                 </Button>
               </div>
             </Col>

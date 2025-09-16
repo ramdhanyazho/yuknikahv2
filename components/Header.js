@@ -53,7 +53,7 @@ export default function Header() {
           <Nav className="mx-auto fw-semibold">
             <Nav.Link as={Link} href="/">Home</Nav.Link>
             <Nav.Link as={Link} href="/harga">Harga</Nav.Link>
-            <Nav.Link as={Link} href="/template">Template</Nav.Link>
+            <Nav.Link as={Link} href="/contoh">Contoh</Nav.Link>
             <Nav.Link as={Link} href="/artikel">Artikel</Nav.Link>
           </Nav>
 
