@@ -2,7 +2,7 @@
 
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
-import { getServerSession } from "next-auth/next";
+import { getServerSession } from "next-auth"; // <-- dari sini sekarang
 import { authOptions } from "@/lib/auth";
 
 export async function POST(req) {
@@ -20,7 +20,6 @@ export async function POST(req) {
       return NextResponse.json({ error: "Name and phone are required" }, { status: 400 });
     }
 
-    // Pastikan kirim string, jangan undefined
     await query(
       "UPDATE users SET name = ?, phone = ? WHERE id = ?",
       [name.trim(), phone.trim(), session.user.id]
