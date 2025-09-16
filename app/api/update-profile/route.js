@@ -1,14 +1,12 @@
 /* /app/api/update-profile/route.js */
 
 import { NextResponse } from "next/server";
+import { auth } from "@/lib/auth"; // pakai ini, jangan getServerSession
 import { query } from "@/lib/db";
-import { getServerSession } from "next-auth"; // <-- dari sini sekarang
-import { authOptions } from "@/lib/auth";
 
 export async function POST(req) {
   try {
-    // Ambil session yang valid di server
-    const session = await getServerSession(authOptions);
+    const session = await auth(); // <-- ini yang benar di v4
     if (!session || !session.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -22,12 +20,13 @@ export async function POST(req) {
 
     await query(
       "UPDATE users SET name = ?, phone = ? WHERE id = ?",
-      [name.trim(), phone.trim(), session.user.id]
+      [name, phone, session.user.id]
     );
 
     return NextResponse.json({ message: "Profile updated successfully" });
   } catch (err) {
     console.error("Update Profile Error:", err);
-    return NextResponse.json({ error: err.message || "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
+
