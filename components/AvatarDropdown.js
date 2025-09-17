@@ -10,7 +10,7 @@ export default function AvatarDropdown() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // 🔹 Fetch session fresh
+  // Fetch session fresh tiap kali
   useEffect(() => {
     const fetchSession = async () => {
       try {
@@ -19,6 +19,7 @@ export default function AvatarDropdown() {
         setSession(data?.user || null);
       } catch (err) {
         console.error('Gagal ambil session:', err);
+        setSession(null);
       } finally {
         setLoading(false);
       }
@@ -26,8 +27,11 @@ export default function AvatarDropdown() {
     fetchSession();
   }, []);
 
-  if (loading) return <Spinner animation="border" size="sm" />;
+  if (loading) {
+    return <Spinner animation="border" size="sm" />;
+  }
 
+  // 👉 Jangan render dropdown kalau belum login
   if (!session) {
     return (
       <Link href="/login" className="btn btn-outline-dark fw-semibold px-3">
@@ -36,8 +40,6 @@ export default function AvatarDropdown() {
     );
   }
 
-  const avatarLetter = session?.name?.[0]?.toUpperCase() || 'U';
-
   return (
     <Dropdown align="end">
       <Dropdown.Toggle
@@ -45,7 +47,7 @@ export default function AvatarDropdown() {
         id="dropdown-basic"
         className="d-flex align-items-center border-0 bg-transparent"
       >
-        {session.image ? (
+        {session?.image ? (
           <img
             src={session.image}
             alt="Avatar"
@@ -58,23 +60,23 @@ export default function AvatarDropdown() {
             className="rounded-circle bg-secondary text-white d-flex justify-content-center align-items-center me-2"
             style={{ width: 32, height: 32, fontSize: 14 }}
           >
-            {avatarLetter}
+            {session?.name ? session.name[0].toUpperCase() : 'U'}
           </div>
         )}
-        <span className="fw-semibold">{session.name}</span>
+        <span className="fw-semibold">{session?.name || 'User'}</span>
       </Dropdown.Toggle>
 
       <Dropdown.Menu>
-        <Link href="/dashboard/profil" className="dropdown-item">
+        <Dropdown.Item as={Link} href="/dashboard/profil">
           Profil Saya
-        </Link>
-        <Link href="/dashboard/reset-password" className="dropdown-item">
+        </Dropdown.Item>
+        <Dropdown.Item as={Link} href="/dashboard/reset-password">
           Ganti Password
-        </Link>
+        </Dropdown.Item>
         <Dropdown.Divider />
-        <div className="px-3">
+        <Dropdown.Item>
           <SignOutButton onLogout={() => setSession(null)} />
-        </div>
+        </Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
   );
