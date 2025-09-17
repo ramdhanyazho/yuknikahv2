@@ -10,7 +10,7 @@ export default function AvatarDropdown() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // 🔹 Fetch session fresh setiap kali
+  // 🔹 Fetch session fresh
   useEffect(() => {
     const fetchSession = async () => {
       try {
@@ -26,9 +26,7 @@ export default function AvatarDropdown() {
     fetchSession();
   }, []);
 
-  if (loading) {
-    return <Spinner animation="border" size="sm" />;
-  }
+  if (loading) return <Spinner animation="border" size="sm" />;
 
   if (!session) {
     return (
@@ -67,20 +65,16 @@ export default function AvatarDropdown() {
       </Dropdown.Toggle>
 
       <Dropdown.Menu>
-        <Dropdown.Item as="div">
-          <Link href="/dashboard/profil" className="dropdown-item">
-            Profil Saya
-          </Link>
-        </Dropdown.Item>
-        <Dropdown.Item as="div">
-          <Link href="/dashboard/reset-password" className="dropdown-item">
-            Ganti Password
-          </Link>
-        </Dropdown.Item>
+        <Link href="/dashboard/profil" className="dropdown-item">
+          Profil Saya
+        </Link>
+        <Link href="/dashboard/reset-password" className="dropdown-item">
+          Ganti Password
+        </Link>
         <Dropdown.Divider />
-        <Dropdown.Item as="div">
+        <div className="px-3">
           <SignOutButton onLogout={() => setSession(null)} />
-        </Dropdown.Item>
+        </div>
       </Dropdown.Menu>
     </Dropdown>
   );
