@@ -1,4 +1,4 @@
-// app/components/AvatarDropdown.js
+// components/AvatarDropdown.js
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -10,11 +10,11 @@ export default function AvatarDropdown() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // 🔹 Fetch session
+  // 🔹 Fetch session dari API
   useEffect(() => {
     const fetchSession = async () => {
       try {
-        const res = await fetch('/api/auth/session');
+        const res = await fetch('/api/auth/session', { cache: "no-store" });
         const data = await res.json();
         setSession(data?.user || null);
       } catch (err) {
@@ -26,9 +26,7 @@ export default function AvatarDropdown() {
     fetchSession();
   }, []);
 
-  if (loading) {
-    return <Spinner animation="border" size="sm" />;
-  }
+  if (loading) return <Spinner animation="border" size="sm" />;
 
   if (!session) {
     return (
@@ -72,10 +70,9 @@ export default function AvatarDropdown() {
           Ganti Password
         </Dropdown.Item>
         <Dropdown.Divider />
-        {/* 🔹 Ganti ke SignOutButton, style biar mirip dropdown item */}
-        <div className="px-3 py-1">
-          <SignOutButton className="w-100" redirectTo="/" />
-        </div>
+        <Dropdown.Item>
+          <SignOutButton onLogout={() => setSession(null)} />
+        </Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
   );

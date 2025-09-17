@@ -16,8 +16,9 @@ export default function SignOutButton({ className = "", redirectTo = "/" }) {
 
       if (!res.ok) throw new Error("Gagal logout");
 
+      // 🔹 Clear cache session Next.js App Router
       router.push(redirectTo);
-      router.refresh();
+      router.refresh(); // penting biar AvatarDropdown refetch /api/auth/session
     } catch (err) {
       console.error("Logout gagal:", err);
     }
