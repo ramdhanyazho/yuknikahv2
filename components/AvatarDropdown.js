@@ -7,7 +7,7 @@ import { Dropdown, Spinner } from 'react-bootstrap';
 import SignOutButton from './SignOutButton';
 
 export default function AvatarDropdown() {
-  const [session, setSession] = useState(null);
+  const [session, setSession] = useState(true);
   const [loading, setLoading] = useState(true);
 
   // Fetch session fresh tiap kali
