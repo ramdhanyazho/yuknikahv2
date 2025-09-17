@@ -7,10 +7,9 @@ import { Dropdown, Spinner } from 'react-bootstrap';
 import SignOutButton from './SignOutButton';
 
 export default function AvatarDropdown() {
-  const [session, setSession] = useState(true);
+  const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Fetch session fresh tiap kali
   useEffect(() => {
     const fetchSession = async () => {
       try {
@@ -31,7 +30,7 @@ export default function AvatarDropdown() {
     return <Spinner animation="border" size="sm" />;
   }
 
-  // 👉 Jangan render dropdown kalau belum login
+  // 🔹 Kalau belum login, render tombol Login
   if (!session) {
     return (
       <Link href="/login" className="btn btn-outline-dark fw-semibold px-3">
