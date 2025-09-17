@@ -10,16 +10,15 @@ export default function AvatarDropdown() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // 🔹 Fetch session fresh setiap kali
   useEffect(() => {
     const fetchSession = async () => {
       try {
         const res = await fetch('/api/auth/session', { cache: 'no-store' });
-        if (!res.ok) throw new Error('Gagal ambil session');
         const data = await res.json();
         setSession(data?.user || null);
       } catch (err) {
         console.error('Gagal ambil session:', err);
-        setSession(null); // fallback aman
       } finally {
         setLoading(false);
       }
@@ -27,7 +26,9 @@ export default function AvatarDropdown() {
     fetchSession();
   }, []);
 
-  if (loading) return <Spinner animation="border" size="sm" />;
+  if (loading) {
+    return <Spinner animation="border" size="sm" />;
+  }
 
   if (!session) {
     return (
@@ -62,15 +63,19 @@ export default function AvatarDropdown() {
             {avatarLetter}
           </div>
         )}
-        <span className="fw-semibold">{session?.name || 'User'}</span>
+        <span className="fw-semibold">{session.name}</span>
       </Dropdown.Toggle>
 
       <Dropdown.Menu>
-        <Dropdown.Item as={Link} href="/dashboard/profil">
-          Profil Saya
+        <Dropdown.Item as="div">
+          <Link href="/dashboard/profil" className="dropdown-item">
+            Profil Saya
+          </Link>
         </Dropdown.Item>
-        <Dropdown.Item as={Link} href="/dashboard/reset-password">
-          Ganti Password
+        <Dropdown.Item as="div">
+          <Link href="/dashboard/reset-password" className="dropdown-item">
+            Ganti Password
+          </Link>
         </Dropdown.Item>
         <Dropdown.Divider />
         <Dropdown.Item as="div">
