@@ -1,3 +1,5 @@
+/* components/ClientHeader.js */
+
 'use client';
 
 import { Dropdown, Image } from 'react-bootstrap';
@@ -8,10 +10,8 @@ export default function ClientHeader({ user }) {
   const name = user?.name || "Klien Anda";
 
   const initials = name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase();
+    ? name.split(" ").map((n) => n[0]).join("").toUpperCase()
+    : "U";
 
   return (
     <div className="d-flex justify-content-end align-items-center mb-3">

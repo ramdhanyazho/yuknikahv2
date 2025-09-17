@@ -78,7 +78,6 @@ export default function DashboardLayout({ children }) {
       try {
         const res = await fetch('/api/auth/session', { cache: 'no-store' });
         const data = await res.json();
-        console.log('✅ Session data:', data);
         setSession(data?.user || null);
       } catch (err) {
         console.error('Gagal fetch session:', err);
@@ -111,11 +110,7 @@ export default function DashboardLayout({ children }) {
               <Spinner animation="border" size="sm" />
             ) : session ? (
               <Dropdown align="end">
-                <Dropdown.Toggle
-                  variant="light"
-                  id="dropdown-basic"
-                  className="d-flex align-items-center"
-                >
+                <Dropdown.Toggle variant="light" id="dropdown-basic" className="d-flex align-items-center">
                   {session?.image ? (
                     <img
                       src={session.image}
@@ -132,16 +127,12 @@ export default function DashboardLayout({ children }) {
                       {session?.name ? session.name[0].toUpperCase() : 'U'}
                     </div>
                   )}
-                  <span className="fw-semibold">{session?.name || 'User'}</span>
+                  <span className="fw-semibold">{session?.name || 'Guest'}</span>
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
-                  <Dropdown.Item as={Link} href="/dashboard/profil">
-                    Profil Saya
-                  </Dropdown.Item>
-                  <Dropdown.Item as={Link} href="/dashboard/reset-password">
-                    Ganti Password
-                  </Dropdown.Item>
+                  <Dropdown.Item as={Link} href="/dashboard/profil">Profil Saya</Dropdown.Item>
+                  <Dropdown.Item as={Link} href="/dashboard/reset-password">Ganti Password</Dropdown.Item>
                   <Dropdown.Divider />
                   <Dropdown.Item>
                     <SignOutButton />
