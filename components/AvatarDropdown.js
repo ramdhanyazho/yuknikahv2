@@ -10,6 +10,7 @@ export default function AvatarDropdown() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // 🔹 Fetch session
   useEffect(() => {
     const fetchSession = async () => {
       try {
@@ -18,7 +19,6 @@ export default function AvatarDropdown() {
         setSession(data?.user || null);
       } catch (err) {
         console.error('Gagal ambil session:', err);
-        setSession(null);
       } finally {
         setLoading(false);
       }
@@ -30,7 +30,6 @@ export default function AvatarDropdown() {
     return <Spinner animation="border" size="sm" />;
   }
 
-  // 🔹 Kalau belum login, render tombol Login
   if (!session) {
     return (
       <Link href="/login" className="btn btn-outline-dark fw-semibold px-3">
@@ -53,13 +52,16 @@ export default function AvatarDropdown() {
             width={32}
             height={32}
             className="rounded-circle me-2"
+            onError={(e) => {
+              e.currentTarget.src = '/default-avatar.png'; // fallback avatar
+            }}
           />
         ) : (
           <div
             className="rounded-circle bg-secondary text-white d-flex justify-content-center align-items-center me-2"
             style={{ width: 32, height: 32, fontSize: 14 }}
           >
-            {session?.name ? session.name[0].toUpperCase() : 'U'}
+            {session?.name?.[0]?.toUpperCase() || 'U'}
           </div>
         )}
         <span className="fw-semibold">{session?.name || 'User'}</span>
@@ -74,7 +76,7 @@ export default function AvatarDropdown() {
         </Dropdown.Item>
         <Dropdown.Divider />
         <Dropdown.Item>
-          <SignOutButton onLogout={() => setSession(null)} />
+          <SignOutButton />
         </Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
