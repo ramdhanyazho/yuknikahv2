@@ -1,27 +1,24 @@
-/* app/components/AvatarDropdown.js */
+// app/components/AvatarDropdown.js
+'use client';
 
-"use client";
-
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { Dropdown, Spinner } from "react-bootstrap";
-import SignOutButton from "./SignOutButton";
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { Dropdown, Spinner } from 'react-bootstrap';
+import SignOutButton from './SignOutButton';
 
 export default function AvatarDropdown() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Fetch session awal
+  // 🔹 Fetch session
   useEffect(() => {
     const fetchSession = async () => {
       try {
-        const res = await fetch("/api/auth/session", {
-          credentials: "include",
-        });
+        const res = await fetch('/api/auth/session');
         const data = await res.json();
         setSession(data?.user || null);
       } catch (err) {
-        console.error("Gagal ambil session:", err);
+        console.error('Gagal ambil session:', err);
       } finally {
         setLoading(false);
       }
@@ -61,7 +58,7 @@ export default function AvatarDropdown() {
             className="rounded-circle bg-secondary text-white d-flex justify-content-center align-items-center me-2"
             style={{ width: 32, height: 32, fontSize: 14 }}
           >
-            {session.name ? session.name[0].toUpperCase() : "U"}
+            {session.name ? session.name[0].toUpperCase() : 'U'}
           </div>
         )}
         <span className="fw-semibold">{session.name}</span>
@@ -75,10 +72,10 @@ export default function AvatarDropdown() {
           Ganti Password
         </Dropdown.Item>
         <Dropdown.Divider />
-        <Dropdown.Item as="div">
-          {/* 🔹 Pass callback untuk clear state session */}
-          <SignOutButton onLogout={() => setSession(null)} />
-        </Dropdown.Item>
+        {/* 🔹 Ganti ke SignOutButton, style biar mirip dropdown item */}
+        <div className="px-3 py-1">
+          <SignOutButton className="w-100" redirectTo="/" />
+        </div>
       </Dropdown.Menu>
     </Dropdown>
   );

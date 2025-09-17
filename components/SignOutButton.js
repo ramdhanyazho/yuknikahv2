@@ -4,7 +4,7 @@
 import { useRouter } from "next/navigation";
 import { Button } from "react-bootstrap";
 
-export default function SignOutButton({ onLogout }) {
+export default function SignOutButton({ className = "", redirectTo = "/" }) {
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -16,11 +16,8 @@ export default function SignOutButton({ onLogout }) {
 
       if (!res.ok) throw new Error("Gagal logout");
 
-      // Trigger callback untuk clear session di parent
-      if (onLogout) onLogout();
-
-      // Redirect ke login
-      router.push("/login");
+      router.push(redirectTo);
+      router.refresh();
     } catch (err) {
       console.error("Logout gagal:", err);
     }
@@ -30,7 +27,7 @@ export default function SignOutButton({ onLogout }) {
     <Button
       variant="outline-danger"
       size="sm"
-      className="w-100 fw-semibold"
+      className={`fw-semibold ${className}`}
       onClick={handleLogout}
     >
       Logout
