@@ -4,6 +4,7 @@
 
 import { useState } from 'react';
 import { Form, Button, Card, Alert, Spinner } from 'react-bootstrap';
+import { signOut } from "next-auth/react";
 
 // Helper agar aman parsing JSON
 async function safeFetchJson(res) {
@@ -12,7 +13,7 @@ async function safeFetchJson(res) {
     return await res.json();
   } else {
     const text = await res.text();
-    return { error: text }; // balikin plain text biar gak crash
+    return { error: text }; // biar gak crash kalau bukan JSON
   }
 }
 
@@ -76,11 +77,25 @@ export default function ProfilPage() {
       if (!res.ok) throw new Error(data.error || 'Gagal upload avatar');
 
       setMessage({ type: 'success', text: data.message || 'Avatar berhasil diperbarui ✅' });
-      setAvatar(null);
+      setAvatar(null); // reset input file
     } catch (err) {
       setMessage({ type: 'danger', text: err.message });
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Handle logout
+  const handleLogout = async () => {
+    try {
+      const res = await fetch("/api/logout", { method: "POST" });
+      if (res.ok) {
+        await signOut({ callbackUrl: "/" });
+      } else {
+        console.error("Gagal logout:", await res.text());
+      }
+    } catch (err) {
+      console.error("Logout error:", err);
     }
   };
 
@@ -120,7 +135,7 @@ export default function ProfilPage() {
       </Form>
 
       {/* Form Upload Avatar */}
-      <Form onSubmit={handleAvatarUpload}>
+      <Form onSubmit={handleAvatarUpload} className="mb-4">
         <Form.Group className="mb-3">
           <Form.Label>Upload Avatar</Form.Label>
           <Form.Control
@@ -134,6 +149,11 @@ export default function ProfilPage() {
           {loading ? <Spinner size="sm" animation="border" /> : 'Upload Avatar'}
         </Button>
       </Form>
+
+      {/* Tombol Logout */}
+      <Button variant="danger" onClick={handleLogout}>
+        Logout
+      </Button>
     </Card>
   );
 }
