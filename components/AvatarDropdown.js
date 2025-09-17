@@ -10,15 +10,16 @@ export default function AvatarDropdown() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // 🔹 Fetch session dari API
   useEffect(() => {
     const fetchSession = async () => {
       try {
-        const res = await fetch('/api/auth/session', { cache: "no-store" });
+        const res = await fetch('/api/auth/session', { cache: 'no-store' });
+        if (!res.ok) throw new Error('Gagal ambil session');
         const data = await res.json();
         setSession(data?.user || null);
       } catch (err) {
         console.error('Gagal ambil session:', err);
+        setSession(null); // fallback aman
       } finally {
         setLoading(false);
       }
@@ -35,6 +36,8 @@ export default function AvatarDropdown() {
       </Link>
     );
   }
+
+  const avatarLetter = session?.name?.[0]?.toUpperCase() || 'U';
 
   return (
     <Dropdown align="end">
@@ -56,10 +59,10 @@ export default function AvatarDropdown() {
             className="rounded-circle bg-secondary text-white d-flex justify-content-center align-items-center me-2"
             style={{ width: 32, height: 32, fontSize: 14 }}
           >
-            {session.name ? session.name[0].toUpperCase() : 'U'}
+            {avatarLetter}
           </div>
         )}
-        <span className="fw-semibold">{session.name}</span>
+        <span className="fw-semibold">{session?.name || 'User'}</span>
       </Dropdown.Toggle>
 
       <Dropdown.Menu>
@@ -70,7 +73,7 @@ export default function AvatarDropdown() {
           Ganti Password
         </Dropdown.Item>
         <Dropdown.Divider />
-        <Dropdown.Item>
+        <Dropdown.Item as="div">
           <SignOutButton onLogout={() => setSession(null)} />
         </Dropdown.Item>
       </Dropdown.Menu>
