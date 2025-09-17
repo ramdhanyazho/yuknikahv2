@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Container,
   Row,
@@ -14,6 +14,7 @@ import {
 } from 'react-bootstrap';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 import SignOutButton from '@/components/SignOutButton';
 
 function SidebarNav() {
@@ -65,27 +66,10 @@ function SidebarNav() {
 
 export default function DashboardLayout({ children }) {
   const [show, setShow] = useState(false);
-  const [session, setSession] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { data: session, status } = useSession();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
-  // 🔹 Ambil session dari /api/auth/session
-  useEffect(() => {
-    const fetchSession = async () => {
-      try {
-        const res = await fetch('/api/auth/session');
-        const data = await res.json();
-        setSession(data?.user || null);
-      } catch (err) {
-        console.error('Gagal fetch session:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchSession();
-  }, []);
 
   return (
     <Container fluid>
@@ -105,14 +89,18 @@ export default function DashboardLayout({ children }) {
             </Button>
 
             {/* Status Login */}
-            {loading ? (
+            {status === 'loading' ? (
               <Spinner animation="border" size="sm" />
-            ) : session ? (
+            ) : session?.user ? (
               <Dropdown align="end">
-                <Dropdown.Toggle variant="light" id="dropdown-basic" className="d-flex align-items-center">
-                  {session.image ? (
+                <Dropdown.Toggle
+                  variant="light"
+                  id="dropdown-basic"
+                  className="d-flex align-items-center"
+                >
+                  {session.user.image ? (
                     <img
-                      src={session.image}
+                      src={session.user.image}
                       alt="Avatar"
                       width={32}
                       height={32}
@@ -123,10 +111,10 @@ export default function DashboardLayout({ children }) {
                       className="rounded-circle bg-secondary text-white d-flex justify-content-center align-items-center me-2"
                       style={{ width: 32, height: 32, fontSize: 14 }}
                     >
-                      {session.name ? session.name[0].toUpperCase() : 'U'}
+                      {session.user.name?.[0]?.toUpperCase() ?? 'U'}
                     </div>
                   )}
-                  <span className="fw-semibold">{session.name}</span>
+                  <span className="fw-semibold">{session.user.name ?? 'User'}</span>
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
