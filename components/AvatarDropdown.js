@@ -16,6 +16,9 @@ export default function AvatarDropdown() {
       try {
         const res = await fetch('/api/auth/session', { cache: 'no-store' });
         const data = await res.json();
+
+        console.log('🔍 DEBUG SESSION API response:', data);
+
         setSession(data?.user || null);
       } catch (err) {
         console.error('Gagal ambil session:', err);
@@ -25,6 +28,8 @@ export default function AvatarDropdown() {
     };
     fetchSession();
   }, []);
+
+  console.log('🔍 DEBUG render session state:', session);
 
   if (loading) {
     return <Spinner animation="border" size="sm" />;
@@ -38,6 +43,10 @@ export default function AvatarDropdown() {
     );
   }
 
+  // 🔹 Null-safe handling
+  const userName = session?.name || 'User';
+  const avatarImage = session?.image || null;
+
   return (
     <Dropdown align="end">
       <Dropdown.Toggle
@@ -45,26 +54,23 @@ export default function AvatarDropdown() {
         id="dropdown-basic"
         className="d-flex align-items-center border-0 bg-transparent"
       >
-        {session?.image ? (
+        {avatarImage ? (
           <img
-            src={session.image}
+            src={avatarImage}
             alt="Avatar"
             width={32}
             height={32}
             className="rounded-circle me-2"
-            onError={(e) => {
-              e.currentTarget.src = '/default-avatar.png'; // fallback avatar
-            }}
           />
         ) : (
           <div
             className="rounded-circle bg-secondary text-white d-flex justify-content-center align-items-center me-2"
             style={{ width: 32, height: 32, fontSize: 14 }}
           >
-            {session?.name?.[0]?.toUpperCase() || 'U'}
+            {userName[0].toUpperCase()}
           </div>
         )}
-        <span className="fw-semibold">{session?.name || 'User'}</span>
+        <span className="fw-semibold">{userName}</span>
       </Dropdown.Toggle>
 
       <Dropdown.Menu>
@@ -76,7 +82,12 @@ export default function AvatarDropdown() {
         </Dropdown.Item>
         <Dropdown.Divider />
         <Dropdown.Item>
-          <SignOutButton />
+          <SignOutButton
+            onLogout={() => {
+              console.log('✅ Logout sukses, clear session');
+              setSession(null);
+            }}
+          />
         </Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
