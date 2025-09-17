@@ -1,7 +1,8 @@
 // app/api/upload-avatar/route.js
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { query } from "@/lib/db";
+import fs from "fs/promises";
+import path from "path";
 
 export async function POST(req) {
   try {
@@ -11,46 +12,43 @@ export async function POST(req) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Ambil formData dari request
     const formData = await req.formData();
     const file = formData.get("file");
 
     if (!file) {
-      return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
+      return NextResponse.json(
+        { error: "No file uploaded" },
+        { status: 400 }
+      );
     }
 
-    // Convert file ke Buffer
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    // Baca isi file sebagai buffer
+    const buffer = Buffer.from(await file.arrayBuffer());
 
-    // Upload ke Blob Storage
-    const blobRes = await fetch(process.env.BLOB_STORAGE_URL, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}`,
-        "Content-Type": "application/octet-stream", // penting untuk upload binary
-      },
-      body: buffer,
-    });
+    // Tentukan path penyimpanan (misal /public/avatars/)
+    const uploadDir = path.join(process.cwd(), "public", "avatars");
+    await fs.mkdir(uploadDir, { recursive: true });
 
-    if (!blobRes.ok) {
-      return NextResponse.json({ error: "Failed to upload avatar" }, { status: 500 });
-    }
+    // Nama file unik (email + timestamp + ekstensi)
+    const ext = path.extname(file.name) || ".png";
+    const filename = `${session.user.email.replace(/[@.]/g, "_")}_${Date.now()}${ext}`;
+    const filepath = path.join(uploadDir, filename);
 
-    const blobData = await blobRes.json();
-    const avatarUrl = blobData.url;
+    await fs.writeFile(filepath, buffer);
 
-    // 🔑 Update berdasarkan email
-    await query(
-      "UPDATE users SET avatar = ? WHERE email = ?",
-      [avatarUrl, session.user.email]
-    );
+    // Simpan path/avatar URL ke DB (opsional, sesuai kebutuhan)
+    // await query("UPDATE users SET avatar = ? WHERE email = ?", [`/avatars/${filename}`, session.user.email]);
 
     return NextResponse.json({
-      message: "Avatar uploaded successfully ✅",
-      url: avatarUrl,
+      message: "Avatar uploaded ✅",
+      url: `/avatars/${filename}`,
     });
   } catch (err) {
     console.error("Upload Avatar Error:", err);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: err.message || "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

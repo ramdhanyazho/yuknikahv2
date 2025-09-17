@@ -5,6 +5,17 @@
 import { useState } from 'react';
 import { Form, Button, Card, Alert, Spinner } from 'react-bootstrap';
 
+// Helper agar aman parsing JSON
+async function safeFetchJson(res) {
+  const contentType = res.headers.get("content-type") || "";
+  if (contentType.includes("application/json")) {
+    return await res.json();
+  } else {
+    const text = await res.text();
+    return { error: text }; // balikin plain text biar gak crash
+  }
+}
+
 export default function ProfilPage() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -25,14 +36,14 @@ export default function ProfilPage() {
 
       const res = await fetch('/api/update-profile', {
         method: 'POST',
-        body: formData,           // pakai FormData, bukan JSON
-        credentials: 'include',   // penting agar cookie session dikirim
+        body: formData,
+        credentials: 'include',
       });
 
-      const data = await res.json();
+      const data = await safeFetchJson(res);
       if (!res.ok) throw new Error(data.error || 'Gagal update profil');
 
-      setMessage({ type: 'success', text: data.message });
+      setMessage({ type: 'success', text: data.message || 'Profil berhasil diperbarui ✅' });
     } catch (err) {
       setMessage({ type: 'danger', text: err.message });
     } finally {
@@ -58,14 +69,14 @@ export default function ProfilPage() {
       const res = await fetch('/api/upload-avatar', {
         method: 'POST',
         body: formData,
-        credentials: 'include',  // WAJIB
+        credentials: 'include',
       });
 
-      const data = await res.json();
+      const data = await safeFetchJson(res);
       if (!res.ok) throw new Error(data.error || 'Gagal upload avatar');
 
-      setMessage({ type: 'success', text: data.message });
-      setAvatar(null); // reset input file
+      setMessage({ type: 'success', text: data.message || 'Avatar berhasil diperbarui ✅' });
+      setAvatar(null);
     } catch (err) {
       setMessage({ type: 'danger', text: err.message });
     } finally {
